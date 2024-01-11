@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2016-2023 JOML
+ * Copyright (c) 2016-2022 JOML
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,12 @@
  */
 package org.joml;
 
-//#ifdef __HAS_NIO__
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-//#endif
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+
 
 /**
  * Interface to a read-only view of a 4x3 matrix of single-precision floats.
@@ -68,17 +69,11 @@ public interface Matrix4x3fc {
     int PLANE_PZ = 5;
 
     /**
-     * Bit returned by {@link #properties()} to indicate that the matrix represents an unknown transformation.
-     */
-    byte PROPERTY_UNKNOWN = 0;
-    /**
      * Bit returned by {@link #properties()} to indicate that the matrix represents the identity transformation.
-     * This implies {@link #PROPERTY_TRANSLATION} and {@link #PROPERTY_ORTHONORMAL}.
      */
     byte PROPERTY_IDENTITY = 1<<2;
     /**
      * Bit returned by {@link #properties()} to indicate that the matrix represents a pure translation transformation.
-     * This implies {@link #PROPERTY_ORTHONORMAL}.
      */
     byte PROPERTY_TRANSLATION = 1<<3;
     /**
@@ -518,7 +513,7 @@ public interface Matrix4x3fc {
      */
     Quaterniond getNormalizedRotation(Quaterniond dest);
 
-//#ifdef __HAS_NIO__
+
     /**
      * Store this matrix in column-major order into the supplied {@link FloatBuffer} at the current
      * buffer {@link FloatBuffer#position() position}.
@@ -582,9 +577,7 @@ public interface Matrix4x3fc {
      * @return the passed in buffer
      */
     ByteBuffer get(int index, ByteBuffer buffer);
-//#endif
 
-//#ifdef __HAS_UNSAFE__
     /**
      * Store this matrix in column-major order at the given off-heap address.
      * <p>
@@ -597,19 +590,6 @@ public interface Matrix4x3fc {
      * @return this
      */
     Matrix4x3fc getToAddress(long address);
-    /**
-     * Store this matrix in row-major order at the given off-heap address.
-     * <p>
-     * This method will throw an {@link UnsupportedOperationException} when JOML is used with `-Djoml.nounsafe`.
-     * <p>
-     * <em>This method is unsafe as it can result in a crash of the JVM process when the specified address range does not belong to this process.</em>
-     *
-     * @param address
-     *            the off-heap address where to store this matrix
-     * @return this
-     */
-    Matrix4x3fc getTransposedToAddress(long address);
-//#endif
 
     /**
      * Store this matrix into the supplied float array in column-major order at the given offset.
@@ -661,7 +641,6 @@ public interface Matrix4x3fc {
      */
     float[] get4x4(float[] arr);
 
-//#ifdef __HAS_NIO__
     /**
      * Store a 4x4 matrix in column-major order into the supplied {@link FloatBuffer} at the current
      * buffer {@link FloatBuffer#position() position}, where the upper 4x3 submatrix is <code>this</code> and the last row is <code>(0, 0, 0, 1)</code>.
@@ -853,7 +832,6 @@ public interface Matrix4x3fc {
      * @return the passed in buffer
      */
     ByteBuffer getTransposed(int index, ByteBuffer buffer);
-//#endif
 
     /**
      * Store this matrix into the supplied float array in row-major order at the given offset.
@@ -2759,7 +2737,7 @@ public interface Matrix4x3fc {
      * This method assumes that the left 3x3 submatrix of <code>this</code> only represents a rotation without scaling.
      * <p>
      * The Euler angles are always returned as the angle around X in the {@link Vector3f#x} field, the angle around Y in the {@link Vector3f#y}
-     * field and the angle around Z in the {@link Vector3f#z} field of the supplied vector.
+     * field and the angle around Z in the {@link Vector3f#z} field of the supplied {@link Vector3f} instance.
      * <p>
      * Note that the returned Euler angles must be applied in the order <code>X * Y * Z</code> to obtain the identical matrix.
      * This means that calling {@link Matrix4x3fc#rotateXYZ(float, float, float, Matrix4x3f)} using the obtained Euler angles will yield
@@ -2786,7 +2764,7 @@ public interface Matrix4x3fc {
      * This method assumes that the left 3x3 submatrix of <code>this</code> only represents a rotation without scaling.
      * <p>
      * The Euler angles are always returned as the angle around X in the {@link Vector3f#x} field, the angle around Y in the {@link Vector3f#y}
-     * field and the angle around Z in the {@link Vector3f#z} field of the supplied vector.
+     * field and the angle around Z in the {@link Vector3f#z} field of the supplied {@link Vector3f} instance.
      * <p>
      * Note that the returned Euler angles must be applied in the order <code>Z * Y * X</code> to obtain the identical matrix.
      * This means that calling {@link Matrix4x3fc#rotateZYX(float, float, float, Matrix4x3f)} using the obtained Euler angles will yield
@@ -2805,33 +2783,6 @@ public interface Matrix4x3fc {
      * @return dest
      */
     Vector3f getEulerAnglesZYX(Vector3f dest);
-
-    /**
-     * Extract the Euler angles from the rotation represented by the left 3x3 submatrix of <code>this</code>
-     * and store the extracted Euler angles in <code>dest</code>.
-     * <p>
-     * This method assumes that the left 3x3 submatrix of <code>this</code> only represents a rotation without scaling.
-     * <p>
-     * The Euler angles are always returned as the angle around X in the {@link Vector3f#x} field, the angle around Y in the {@link Vector3f#y}
-     * field and the angle around Z in the {@link Vector3f#z} field of the supplied vector.
-     * <p>
-     * Note that the returned Euler angles must be applied in the order <code>Y * X * Z</code> to obtain the identical matrix.
-     * This means that calling {@link Matrix4x3fc#rotateYXZ(float, float, float, Matrix4x3f)} using the obtained Euler angles will yield
-     * the same rotation as the original matrix from which the Euler angles were obtained, so in the below code the matrix
-     * <code>m2</code> should be identical to <code>m</code> (disregarding possible floating-point inaccuracies).
-     * <pre>
-     * Matrix4x3f m = ...; // &lt;- matrix only representing rotation
-     * Matrix4x3f n = new Matrix4x3f();
-     * n.rotateYXZ(m.getEulerAnglesYXZ(new Vector3f()));
-     * </pre>
-     * <p>
-     * Reference: <a href="http://nghiaho.com/?page_id=846">http://nghiaho.com/</a>
-     *
-     * @param dest
-     *          will hold the extracted Euler angles
-     * @return dest
-     */
-    Vector3f getEulerAnglesYXZ(Vector3f dest);
 
     /**
      * Apply an oblique projection transformation to this matrix with the given values for <code>a</code> and

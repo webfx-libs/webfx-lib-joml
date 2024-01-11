@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2020-2023 JOML
+ * Copyright (c) 2020-2022 JOML
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,11 @@
  */
 package org.joml;
 
-//#ifdef __HAS_NIO__
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-//#endif
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Interface to a read-only view of a 2x2 matrix of single-precision floats.
@@ -167,7 +167,7 @@ public interface Matrix2fc {
      */
     float getRotation();
 
-//#ifdef __HAS_NIO__
+
     /**
      * Store this matrix in column-major order into the supplied {@link FloatBuffer} at the current
      * buffer {@link FloatBuffer#position() position}.
@@ -295,9 +295,7 @@ public interface Matrix2fc {
      * @return the passed in buffer
      */
     ByteBuffer getTransposed(int index, ByteBuffer buffer);
-//#endif
 
-//#ifdef __HAS_UNSAFE__
     /**
      * Store this matrix in column-major order at the given off-heap address.
      * <p>
@@ -310,19 +308,6 @@ public interface Matrix2fc {
      * @return this
      */
     Matrix2fc getToAddress(long address);
-    /**
-     * Store this matrix in row-major order at the given off-heap address.
-     * <p>
-     * This method will throw an {@link UnsupportedOperationException} when JOML is used with `-Djoml.nounsafe`.
-     * <p>
-     * <em>This method is unsafe as it can result in a crash of the JVM process when the specified address range does not belong to this process.</em>
-     *
-     * @param address
-     *            the off-heap address where to store this matrix
-     * @return this
-     */
-    Matrix2fc getTransposedToAddress(long address);
-//#endif
 
     /**
      * Store this matrix into the supplied float array in column-major order at the given offset.

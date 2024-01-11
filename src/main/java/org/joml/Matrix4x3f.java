@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2015-2023 Richard Greenlees
+ * Copyright (c) 2015-2022 Richard Greenlees
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,18 +23,11 @@
  */
 package org.joml;
 
-import org.intellij.lang.annotations.MagicConstant;
-
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-//#ifdef __HAS_NIO__
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-//#endif
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+
 
 /**
  * Contains the definition of an affine 4x3 matrix (4 columns, 3 rows) of floats, and associated functions to transform
@@ -47,9 +40,9 @@ import java.text.NumberFormat;
  * @author Richard Greenlees
  * @author Kai Burjack
  */
-public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
+public class Matrix4x3f implements /*Externalizable, Cloneable,*/ Matrix4x3fc {
 
-    private static final long serialVersionUID = 1L;
+    //private static final long serialVersionUID = 1L;
 
     float m00, m01, m02;
     float m10, m11, m12;
@@ -136,7 +129,6 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         determineProperties();
     }
 
-//#ifdef __HAS_NIO__
     /**
      * Create a new {@link Matrix4x3f} by reading its 12 float components from the given {@link FloatBuffer}
      * at the buffer's current position.
@@ -152,7 +144,6 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         MemUtil.INSTANCE.get(this, buffer.position(), buffer);
         determineProperties();
     }
-//#endif
 
     /**
      * Create a new {@link Matrix4x3f} and initialize its four columns using the supplied vectors.
@@ -181,7 +172,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
      *          bitset of the properties to assume about this matrix
      * @return this
      */
-    public Matrix4x3f assume(@MagicConstant(intValues = {PROPERTY_UNKNOWN, PROPERTY_IDENTITY, PROPERTY_TRANSLATION, PROPERTY_ORTHONORMAL}) int properties) {
+    public Matrix4x3f assume(int properties) {
         this.properties = properties;
         return this;
     }
@@ -193,7 +184,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
      * @return this
      */
     public Matrix4x3f determineProperties() {
-        int properties = PROPERTY_UNKNOWN;
+        int properties = 0;
         if (m00 == 1.0f && m01 == 0.0f && m02 == 0.0f && m10 == 0.0f && m11 == 1.0f && m12 == 0.0f
                 && m20 == 0.0f && m21 == 0.0f && m22 == 1.0f) {
             properties |= PROPERTY_TRANSLATION | PROPERTY_ORTHONORMAL;
@@ -208,7 +199,6 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         return this;
     }
 
-    @MagicConstant(intValues = {PROPERTY_UNKNOWN, PROPERTY_IDENTITY, PROPERTY_TRANSLATION, PROPERTY_ORTHONORMAL})
     public int properties() {
         return properties;
     }
@@ -596,8 +586,6 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
      * @return this
      */
     public Matrix4x3f set(Matrix4x3fc m) {
-        if (m == this)
-            return this;
         m00 = m.m00();
         m01 = m.m01();
         m02 = m.m02();
@@ -1024,7 +1012,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         ._m30(m30)
         ._m31(m31)
         ._m32(m32)
-        ._properties(PROPERTY_UNKNOWN);
+        ._properties(0);
     }
 
     /**
@@ -1058,7 +1046,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         ._m30(Math.fma(other.m30(), otherFactor, m30))
         ._m31(Math.fma(other.m31(), otherFactor, m31))
         ._m32(Math.fma(other.m32(), otherFactor, m32))
-        ._properties(PROPERTY_UNKNOWN);
+        ._properties(0);
         return dest;
     }
 
@@ -1086,7 +1074,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         dest.m30 = m30 + other.m30();
         dest.m31 = m31 + other.m31();
         dest.m32 = m32 + other.m32();
-        dest.properties = PROPERTY_UNKNOWN;
+        dest.properties = 0;
         return dest;
     }
 
@@ -1114,7 +1102,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         dest.m30 = m30 - subtrahend.m30();
         dest.m31 = m31 - subtrahend.m31();
         dest.m32 = m32 - subtrahend.m32();
-        dest.properties = PROPERTY_UNKNOWN;
+        dest.properties = 0;
         return dest;
     }
 
@@ -1142,7 +1130,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         dest.m30 = m30 * other.m30();
         dest.m31 = m31 * other.m31();
         dest.m32 = m32 * other.m32();
-        dest.properties = PROPERTY_UNKNOWN;
+        dest.properties = 0;
         return dest;
     }
 
@@ -1239,7 +1227,6 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         return set(m, 0);
     }
 
-//#ifdef __HAS_NIO__
     /**
      * Set the values of this matrix by reading 12 float values from the given {@link FloatBuffer} in column-major order,
      * starting at its current position.
@@ -1311,8 +1298,6 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         MemUtil.INSTANCE.get(this, index, buffer);
         return determineProperties();
     }
-//#endif
-//#ifdef __HAS_UNSAFE__
     /**
      * Set the values of this matrix by reading 12 float values from off-heap memory in column-major order,
      * starting at the given address.
@@ -1328,28 +1313,9 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
     public Matrix4x3f setFromAddress(long address) {
         if (Options.NO_UNSAFE)
             throw new UnsupportedOperationException("Not supported when using joml.nounsafe");
-        MemUtil.MemUtilUnsafe.get(this, address);
+        //MemUtil.MemUtilUnsafe.get(this, address);
         return determineProperties();
     }
-    /**
-     * Set the values of this matrix by reading 12 float values from off-heap memory in row-major order,
-     * starting at the given address.
-     * <p>
-     * This method will throw an {@link UnsupportedOperationException} when JOML is used with `-Djoml.nounsafe`.
-     * <p>
-     * <em>This method is unsafe as it can result in a crash of the JVM process when the specified address range does not belong to this process.</em>
-     *
-     * @param address
-     *              the off-heap memory address to read the matrix values from in row-major order
-     * @return this
-     */
-    public Matrix4x3f setTransposedFromAddress(long address) {
-        if (Options.NO_UNSAFE)
-            throw new UnsupportedOperationException("Not supported when using joml.nounsafe");
-        MemUtil.MemUtilUnsafe.getTransposed(this, address);
-        return determineProperties();
-    }
-//#endif
 
     public float determinant() {
         return (m00 * m11 - m01 * m10) * m22
@@ -1396,7 +1362,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         dest.m30 = nm30;
         dest.m31 = nm31;
         dest.m32 = nm32;
-        dest.properties = PROPERTY_UNKNOWN;
+        dest.properties = 0;
         return dest;
     }
     private Matrix4x3f invertOrthonormal(Matrix4x3f dest) {
@@ -1466,7 +1432,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         ._m31(nm31)
         ._m32(nm32)
         ._m33(1.0f)
-        ._properties(PROPERTY_UNKNOWN);
+        ._properties(0);
     }
     private Matrix4f invertOrthonormal(Matrix4f dest) {
         float nm30 = -(m00 * m30 + m01 * m31 + m02 * m32);
@@ -1512,7 +1478,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
                  0, invM11, 0,
                  0, 0, invM22,
                  -m30 * invM00, -m31 * invM11, -m32 * invM22);
-        dest.properties = PROPERTY_UNKNOWN;
+        dest.properties = 0;
         return dest;
     }
 
@@ -1683,7 +1649,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
      * 
      * @return the string representation
      */
-    public String toString() {
+    /*public String toString() {
         String str = toString(Options.NUMBER_FORMAT);
         StringBuffer res = new StringBuffer();
         int eIndex = Integer.MIN_VALUE;
@@ -1701,7 +1667,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
             res.append(c);
         }
         return res.toString();
-    }
+    }*/
 
     /**
      * Return a string representation of this matrix by formatting the matrix elements with the given {@link NumberFormat}.
@@ -1710,11 +1676,11 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
      *          the {@link NumberFormat} used to format the matrix values with
      * @return the string representation
      */
-    public String toString(NumberFormat formatter) {
+    /*public String toString(NumberFormat formatter) {
         return Runtime.format(m00, formatter) + " " + Runtime.format(m10, formatter) + " " + Runtime.format(m20, formatter) + " " + Runtime.format(m30, formatter) + "\n"
              + Runtime.format(m01, formatter) + " " + Runtime.format(m11, formatter) + " " + Runtime.format(m21, formatter) + " " + Runtime.format(m31, formatter) + "\n"
              + Runtime.format(m02, formatter) + " " + Runtime.format(m12, formatter) + " " + Runtime.format(m22, formatter) + " " + Runtime.format(m32, formatter) + "\n";
-    }
+    }*/
 
     /**
      * Get the current values of <code>this</code> matrix and store them into
@@ -1774,7 +1740,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         return dest.setFromNormalized(this);
     }
 
-//#ifdef __HAS_NIO__
+
     public FloatBuffer get(FloatBuffer buffer) {
         return get(buffer.position(), buffer);
     }
@@ -1792,22 +1758,13 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         MemUtil.INSTANCE.put(this, index, buffer);
         return buffer;
     }
-//#endif
 
-//#ifdef __HAS_UNSAFE__
     public Matrix4x3fc getToAddress(long address) {
         if (Options.NO_UNSAFE)
             throw new UnsupportedOperationException("Not supported when using joml.nounsafe");
-        MemUtil.MemUtilUnsafe.put(this, address);
+        //MemUtil.MemUtilUnsafe.put(this, address);
         return this;
     }
-    public Matrix4x3fc getTransposedToAddress(long address) {
-        if (Options.NO_UNSAFE)
-            throw new UnsupportedOperationException("Not supported when using joml.nounsafe");
-        MemUtil.MemUtilUnsafe.putTransposed(this, address);
-        return this;
-    }
-//#endif
 
     public float[] get(float[] arr, int offset) {
         MemUtil.INSTANCE.copy(this, arr, offset);
@@ -1827,7 +1784,6 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         return get4x4(arr, 0);
     }
 
-//#ifdef __HAS_NIO__
     public FloatBuffer get4x4(FloatBuffer buffer) {
         return get4x4(buffer.position(), buffer);
     }
@@ -1881,7 +1837,6 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         MemUtil.INSTANCE.putTransposed(this, index, buffer);
         return buffer;
     }
-//#endif
 
     public float[] getTransposed(float[] arr, int offset) {
         arr[offset+0]  = m00;
@@ -1910,7 +1865,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
      */
     public Matrix4x3f zero() {
         MemUtil.INSTANCE.zero(this);
-        properties = PROPERTY_UNKNOWN;
+        properties = 0;
         return this;
     }
 
@@ -2625,7 +2580,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         m30 = tx;
         m31 = ty;
         m32 = tz;
-        properties = PROPERTY_UNKNOWN;
+        properties = 0;
         return this;
     }
 
@@ -2748,7 +2703,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         m32 = nm02 * m.m30 + nm12 * m.m31 + nm22 * m.m32 + tz;
         this.m30 = m30;
         this.m31 = m31;
-        properties = PROPERTY_UNKNOWN;
+        properties = 0;
         return this;
     }
 
@@ -3022,7 +2977,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         m30 = nm00 * mat.m30() + nm10 * mat.m31() + nm20 * mat.m32() + tx;
         m31 = nm01 * mat.m30() + nm11 * mat.m31() + nm21 * mat.m32() + ty;
         m32 = nm02 * mat.m30() + nm12 * mat.m31() + nm22 * mat.m32() + tz;
-        this.properties = PROPERTY_UNKNOWN;
+        this.properties = 0;
         return this;
     }
 
@@ -3114,7 +3069,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         } else {
             set3x3Matrix3fc(mat);
         }
-        properties = PROPERTY_UNKNOWN;
+        properties = 0;
         return this;
     }
     private void set3x3Matrix3fc(Matrix3fc mat) {
@@ -4807,7 +4762,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         return translateLocal(x, y, z, this);
     }
 
-    public void writeExternal(ObjectOutput out) throws IOException {
+    /*public void writeExternal(ObjectOutput out) throws IOException {
         out.writeFloat(m00);
         out.writeFloat(m01);
         out.writeFloat(m02);
@@ -4836,7 +4791,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         m31 = in.readFloat();
         m32 = in.readFloat();
         determineProperties();
-    }
+    }*/
 
     /**
      * Apply an orthographic projection transformation for a right-handed coordinate system
@@ -5213,7 +5168,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         m30 = (right + left) / (left - right);
         m31 = (top + bottom) / (bottom - top);
         m32 = (zZeroToOne ? zNear : (zFar + zNear)) / (zNear - zFar);
-        properties = PROPERTY_UNKNOWN;
+        properties = 0;
         return this;
     }
 
@@ -5282,7 +5237,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         m30 = (right + left) / (left - right);
         m31 = (top + bottom) / (bottom - top);
         m32 = (zZeroToOne ? zNear : (zFar + zNear)) / (zNear - zFar);
-        properties = PROPERTY_UNKNOWN;
+        properties = 0;
         return this;
     }
 
@@ -5675,7 +5630,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         m11 = 2.0f / height;
         m22 = (zZeroToOne ? 1.0f : 2.0f) / (zNear - zFar);
         m32 = (zZeroToOne ? zNear : (zFar + zNear)) / (zNear - zFar);
-        properties = PROPERTY_UNKNOWN;
+        properties = 0;
         return this;
     }
 
@@ -5739,7 +5694,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         m11 = 2.0f / height;
         m22 = (zZeroToOne ? 1.0f : 2.0f) / (zFar - zNear);
         m32 = (zZeroToOne ? zNear : (zFar + zNear)) / (zNear - zFar);
-        properties = PROPERTY_UNKNOWN;
+        properties = 0;
         return this;
     }
 
@@ -5983,7 +5938,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         m22 = -1.0f;
         m30 = -(right + left) / (right - left);
         m31 = -(top + bottom) / (top - bottom);
-        properties = PROPERTY_UNKNOWN;
+        properties = 0;
         return this;
     }
 
@@ -6018,7 +5973,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         m22 = 1.0f;
         m30 = -(right + left) / (right - left);
         m31 = -(top + bottom) / (top - bottom);
-        properties = PROPERTY_UNKNOWN;
+        properties = 0;
         return this;
     }
 
@@ -7626,7 +7581,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         default:
             throw new IndexOutOfBoundsException();
         }
-        properties = PROPERTY_UNKNOWN;
+        properties = 0;
         return this;
     }
 
@@ -7693,7 +7648,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         default:
             throw new IndexOutOfBoundsException();
         }
-        properties = PROPERTY_UNKNOWN;
+        properties = 0;
         return this;
     }
 
@@ -7743,7 +7698,8 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         return normalGeneric(dest);
     }
     private Matrix4x3f normalOrthonormal(Matrix4x3f dest) {
-        dest.set(this);
+        if (dest != this)
+            dest.set(this);
         return dest._properties(PROPERTY_ORTHONORMAL);
     }
     private Matrix4x3f normalGeneric(Matrix4x3f dest) {
@@ -8415,6 +8371,8 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
             return true;
         if (m == null)
             return false;
+        if (!(m instanceof Matrix4x3f))
+            return false;
         if (!Runtime.equals(m00, m.m00(), delta))
             return false;
         if (!Runtime.equals(m01, m.m01(), delta))
@@ -8456,7 +8414,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         dest.m10 = m10 * sy;
         dest.m11 = m11 * sy;
         dest.m12 = m12 * sy;
-        dest.properties = PROPERTY_UNKNOWN;
+        dest.properties = 0;
         return dest;
     }
 
@@ -9061,13 +9019,6 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         return dest;
     }
 
-    public Vector3f getEulerAnglesYXZ(Vector3f dest) {
-        dest.x = Math.atan2(-m21, Math.sqrt(1.0f - m21 * m21));
-        dest.y = Math.atan2(m20, m22);
-        dest.z = Math.atan2(m01, m11);
-        return dest;
-    }
-
     /**
      * Apply an oblique projection transformation to this matrix with the given values for <code>a</code> and
      * <code>b</code>.
@@ -9100,7 +9051,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         this.m20 = m00 * a + m10 * b + m20;
         this.m21 = m01 * a + m11 * b + m21;
         this.m22 = m02 * a + m12 * b + m22;
-        this.properties = PROPERTY_UNKNOWN;
+        this.properties = 0;
         return this;
     }
 
@@ -9147,7 +9098,7 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
         dest.m30 = m30;
         dest.m31 = m31;
         dest.m32 = m32;
-        dest.properties = PROPERTY_UNKNOWN;
+        dest.properties = 0;
         return dest;
     }
 
@@ -10027,8 +9978,8 @@ public class Matrix4x3f implements Externalizable, Cloneable, Matrix4x3fc {
                Math.isFinite(m30) && Math.isFinite(m31) && Math.isFinite(m32);
     }
 
-    public Object clone() throws CloneNotSupportedException {
+    /*public Object clone() throws CloneNotSupportedException {
         return super.clone();
-    }
+    }*/
 
 }

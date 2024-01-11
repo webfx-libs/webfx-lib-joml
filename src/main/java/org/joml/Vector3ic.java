@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2016-2023 JOML
+ * Copyright (c) 2016-2022 JOML
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,8 @@
  */
 package org.joml;
 
-//#ifdef __HAS_NIO__
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-//#endif
 
 /**
  * Interface to a read-only view of a 3-dimensional vector of integers.
@@ -50,7 +48,6 @@ public interface Vector3ic {
      */
     int z();
 
-//#ifdef __HAS_NIO__
     /**
      * Store this vector into the supplied {@link IntBuffer} at the current
      * buffer {@link IntBuffer#position() position}.
@@ -114,9 +111,7 @@ public interface Vector3ic {
      * @return the passed in buffer
      */
     ByteBuffer get(int index, ByteBuffer buffer);
-//#endif
 
-//#ifdef __HAS_UNSAFE__
     /**
      * Store this vector at the given off-heap memory address.
      * <p>
@@ -129,7 +124,6 @@ public interface Vector3ic {
      * @return this
      */
     Vector3ic getToAddress(long address);
-//#endif
 
     /**
      * Subtract the supplied vector from this one and store the result in
@@ -227,7 +221,7 @@ public interface Vector3ic {
     Vector3i mul(int x, int y, int z, Vector3i dest);
 
     /**
-     * Divide all components of this vector by the given scalar value
+     * Divide all components of this {@link Vector3i} by the given scalar value
      * and store the result in <code>dest</code>.
      *
      * @param scalar
@@ -239,7 +233,7 @@ public interface Vector3ic {
     Vector3i div(float scalar, Vector3i dest);
 
     /**
-     * Divide all components of this vector by the given scalar value
+     * Divide all components of this {@link Vector3i} by the given scalar value
      * and store the result in <code>dest</code>.
      *
      * @param scalar

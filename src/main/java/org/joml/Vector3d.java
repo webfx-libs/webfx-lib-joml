@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2015-2023 Richard Greenlees
+ * Copyright (c) 2015-2022 Richard Greenlees
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,13 +23,9 @@
  */
 package org.joml;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-//#ifdef __HAS_NIO__
-import java.nio.*;
-//#endif
+import java.nio.ByteBuffer;
+import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -41,9 +37,9 @@ import java.text.NumberFormat;
  * @author Kai Burjack
  * @author F. Neurath
  */
-public class Vector3d implements Externalizable, Cloneable, Vector3dc {
+public class Vector3d implements /*Externalizable, Cloneable,*/ Vector3dc {
 
-    private static final long serialVersionUID = 1L;
+    //private static final long serialVersionUID = 1L;
 
     /**
      * The x component of the vector.
@@ -199,7 +195,6 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
         this.z = xyz[2];
     }
 
-//#ifdef __HAS_NIO__
     /**
      * Create a new {@link Vector3d} and read this vector from the supplied {@link ByteBuffer}
      * at the current buffer {@link ByteBuffer#position() position}.
@@ -259,7 +254,6 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
     public Vector3d(int index, DoubleBuffer buffer) {
         MemUtil.INSTANCE.get(this, index, buffer);
     }
-//#endif
 
     public double x() {
         return this.x;
@@ -274,75 +268,6 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
     }
 
     /**
-     * Copy the <code>(x, y)</code> components of <code>this</code> into the supplied <code>dest</code> vector
-     * and return it.
-     * <p>
-     * Note that due to the given vector <code>dest</code> storing the components in float-precision,
-     * there is the possibility to lose precision.
-     *
-     * @param dest
-     *      will hold the result
-     * @return dest
-     */
-    public Vector2f xy(Vector2f dest) {
-        return dest.set(x, y);
-    }
-
-    /**
-     * Copy the <code>(x, y)</code> components of <code>this</code> into the supplied <code>dest</code> vector
-     * and return it.
-     *
-     * @param dest
-     *      will hold the result
-     * @return dest
-     */
-    public Vector2d xy(Vector2d dest) {
-        return dest.set(x, y);
-    }
-
-    /**
-     * Set this vector to the <code>(x, y, z)</code> components of <code>v</code>.
-     *
-     * @param v
-     *        the vector to copy from
-     * @return this
-     */
-    public Vector3d set(Vector4dc v) {
-        this.x = v.x();
-        this.y = v.y();
-        this.z = v.z();
-        return this;
-    }
-
-    /**
-     * Set this vector to the <code>(x, y, z)</code> components of <code>v</code>.
-     *
-     * @param v
-     *        the vector to copy from
-     * @return this
-     */
-    public Vector3d set(Vector4fc v) {
-        this.x = v.x();
-        this.y = v.y();
-        this.z = v.z();
-        return this;
-    }
-
-    /**
-     * Set this vector to the <code>(x, y, z)</code> components of <code>v</code>.
-     *
-     * @param v
-     *        the vector to copy from
-     * @return this
-     */
-    public Vector3d set(Vector4ic v) {
-        this.x = v.x();
-        this.y = v.y();
-        this.z = v.z();
-        return this;
-    }
-
-    /**
      * Set the x, y and z components to match the supplied vector.
      * 
      * @param v
@@ -350,8 +275,6 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d set(Vector3dc v) {
-        if (v == this)
-            return this;
         this.x = v.x();
         this.y = v.y();
         this.z = v.z();
@@ -497,7 +420,6 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
         return this;
     }
 
-//#ifdef __HAS_NIO__
     /**
      * Read this vector from the supplied {@link ByteBuffer} at the current
      * buffer {@link ByteBuffer#position() position}.
@@ -571,9 +493,7 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
         MemUtil.INSTANCE.get(this, index, buffer);
         return this;
     }
-//#endif
 
-//#ifdef __HAS_UNSAFE__
     /**
      * Set the values of this vector by reading 3 double values from off-heap memory,
      * starting at the given address.
@@ -589,10 +509,9 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
     public Vector3d setFromAddress(long address) {
         if (Options.NO_UNSAFE)
             throw new UnsupportedOperationException("Not supported when using joml.nounsafe");
-        MemUtil.MemUtilUnsafe.get(this, address);
+        //MemUtil.MemUtilUnsafe.get(this, address);
         return this;
     }
-//#endif
 
     /**
      * Set the value of the specified component of this vector.
@@ -621,7 +540,6 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
         return this;
     }
 
-//#ifdef __HAS_NIO__
     public ByteBuffer get(ByteBuffer buffer) {
         MemUtil.INSTANCE.put(this, buffer.position(), buffer);
         return buffer;
@@ -661,16 +579,13 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
         MemUtil.INSTANCE.put(this, index, buffer);
         return buffer;
     }
-//#endif
 
-//#ifdef __HAS_UNSAFE__
     public Vector3dc getToAddress(long address) {
         if (Options.NO_UNSAFE)
             throw new UnsupportedOperationException("Not supported when using joml.nounsafe");
-        MemUtil.MemUtilUnsafe.put(this, address);
+        //MemUtil.MemUtilUnsafe.put(this, address);
         return this;
     }
-//#endif
 
     /**
      * Subtract the supplied vector from this one.
@@ -680,7 +595,10 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d sub(Vector3dc v) {
-        return sub(v, this);
+        this.x = x - v.x();
+        this.y = y - v.y();
+        this.z = z - v.z();
+        return this;
     }
 
     public Vector3d sub(Vector3dc v, Vector3d dest) {
@@ -698,7 +616,10 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d sub(Vector3fc v) {
-        return sub(v, this);
+        this.x = x - v.x();
+        this.y = y - v.y();
+        this.z = z - v.z();
+        return this;
     }
 
     public Vector3d sub(Vector3fc v, Vector3d dest) {
@@ -720,7 +641,10 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d sub(double x, double y, double z) {
-        return sub(x, y, z, this);
+        this.x = this.x - x;
+        this.y = this.y - y;
+        this.z = this.z - z;
+        return this;
     }
 
     public Vector3d sub(double x, double y, double z, Vector3d dest) {
@@ -738,7 +662,10 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d add(Vector3dc v) {
-        return add(v, this);
+        this.x = x + v.x();
+        this.y = y + v.y();
+        this.z = z + v.z();
+        return this;
     }
 
     public Vector3d add(Vector3dc v, Vector3d dest) {
@@ -756,7 +683,10 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d add(Vector3fc v) {
-        return add(v, this);
+        this.x = x + v.x();
+        this.y = y + v.y();
+        this.z = z + v.z();
+        return this;
     }
 
     public Vector3d add(Vector3fc v, Vector3d dest) {
@@ -778,7 +708,10 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d add(double x, double y, double z) {
-        return add(x, y, z, this);
+        this.x = this.x + x;
+        this.y = this.y + y;
+        this.z = this.z + z;
+        return this;
     }
 
     public Vector3d add(double x, double y, double z, Vector3d dest) {
@@ -798,7 +731,10 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d fma(Vector3dc a, Vector3dc b) {
-        return fma(a, b, this);
+        this.x = Math.fma(a.x(), b.x(), x);
+        this.y = Math.fma(a.y(), b.y(), y);
+        this.z = Math.fma(a.z(), b.z(), z);
+        return this;
     }
 
     /**
@@ -811,7 +747,10 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d fma(double a, Vector3dc b) {
-        return fma(a, b, this);
+        this.x = Math.fma(a, b.x(), x);
+        this.y = Math.fma(a, b.y(), y);
+        this.z = Math.fma(a, b.z(), z);
+        return this;
     }
 
     /**
@@ -824,7 +763,10 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d fma(Vector3fc a, Vector3fc b) {
-        return fma(a, b, this);
+        this.x = Math.fma(a.x(), b.x(), x);
+        this.y = Math.fma(a.y(), b.y(), y);
+        this.z = Math.fma(a.z(), b.z(), z);
+        return this;
     }
 
     public Vector3d fma(Vector3fc a, Vector3fc b, Vector3d dest) {
@@ -844,7 +786,10 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d fma(double a, Vector3fc b) {
-        return fma(a, b, this);
+        this.x = Math.fma(a, b.x(), x);
+        this.y = Math.fma(a, b.y(), y);
+        this.z = Math.fma(a, b.z(), z);
+        return this;
     }
 
     public Vector3d fma(Vector3dc a, Vector3dc b, Vector3d dest) {
@@ -886,7 +831,10 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d mulAdd(Vector3dc a, Vector3dc b) {
-        return mulAdd(a, b, this);
+        this.x = Math.fma(x, a.x(), b.x());
+        this.y = Math.fma(y, a.y(), b.y());
+        this.z = Math.fma(z, a.z(), b.z());
+        return this;
     }
 
     /**
@@ -900,7 +848,10 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d mulAdd(double a, Vector3dc b) {
-        return mulAdd(a, b, this);
+        this.x = Math.fma(x, a, b.x());
+        this.y = Math.fma(y, a, b.y());
+        this.z = Math.fma(z, a, b.z());
+        return this;
     }
 
     public Vector3d mulAdd(Vector3dc a, Vector3dc b, Vector3d dest) {
@@ -925,25 +876,31 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
     }
 
     /**
-     * Multiply this vector component-wise by another Vector3dc.
+     * Multiply this Vector3d component-wise by another Vector3dc.
      * 
      * @param v
      *          the vector to multiply by
      * @return this
      */
     public Vector3d mul(Vector3dc v) {
-        return mul(v, this);
+        this.x = x * v.x();
+        this.y = y * v.y();
+        this.z = z * v.z();
+        return this;
     }
 
     /**
-     * Multiply this vector component-wise by another Vector3fc.
+     * Multiply this Vector3d component-wise by another Vector3fc.
      * 
      * @param v
      *          the vector to multiply by
      * @return this
      */
     public Vector3d mul(Vector3fc v) {
-        return mul(v, this);
+        this.x = x * v.x();
+        this.y = y * v.y();
+        this.z = z * v.z();
+        return this;
     }
 
     public Vector3d mul(Vector3fc v, Vector3d dest) {
@@ -961,25 +918,31 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
     }
 
     /**
-     * Divide this vector component-wise by another Vector3dc.
+     * Divide this Vector3d component-wise by another Vector3dc.
      * 
      * @param v
      *          the vector to divide by
      * @return this
      */
-    public Vector3d div(Vector3dc v) {
-        return div(v, this);
+    public Vector3d div(Vector3d v) {
+        this.x = x / v.x();
+        this.y = y / v.y();
+        this.z = z / v.z();
+        return this;
     }
 
     /**
-     * Divide this vector component-wise by another Vector3fc.
+     * Divide this Vector3d component-wise by another Vector3fc.
      * 
      * @param v
      *          the vector to divide by
      * @return this
      */
     public Vector3d div(Vector3fc v) {
-        return div(v, this);
+        this.x = x / v.x();
+        this.y = y / v.y();
+        this.z = z / v.z();
+        return this;
     }
 
     public Vector3d div(Vector3fc v, Vector3d dest) {
@@ -1007,229 +970,100 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
         return dest;
     }
 
+    public Vector3d mulProject(Matrix4dc mat, Vector3d dest) {
+        double invW = 1.0 / Math.fma(mat.m03(), x, Math.fma(mat.m13(), y, Math.fma(mat.m23(), z, mat.m33())));
+        double rx = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30()))) * invW;
+        double ry = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31()))) * invW;
+        double rz = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32()))) * invW;
+        dest.x = rx;
+        dest.y = ry;
+        dest.z = rz;
+        return dest;
+    }
+
     /**
-     * Multiply the given matrix <code>mat</code> with this vector and perform perspective division.
+     * Multiply the given matrix <code>mat</code> this Vector3d, perform perspective division.
      * <p>
      * This method uses <code>w=1.0</code> as the fourth vector component.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
+     * 
      * @param mat
      *          the matrix to multiply this vector by
      * @return this
      */
     public Vector3d mulProject(Matrix4dc mat) {
-        int prop = mat.properties();
-        if ((prop & Matrix4dc.PROPERTY_IDENTITY) != 0)
-            return this;
-        if ((prop & Matrix4dc.PROPERTY_TRANSLATION) != 0)
-            return mulProjectTranslation(mat, this);
-        if ((prop & Matrix4dc.PROPERTY_AFFINE) != 0)
-            return mulProjectAffine(mat, this);
-        return mulProjectGeneric(mat, this);
+        double invW = 1.0 / Math.fma(mat.m03(), x, Math.fma(mat.m13(), y, Math.fma(mat.m23(), z, mat.m33())));
+        double rx = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30()))) * invW;
+        double ry = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31()))) * invW;
+        double rz = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32()))) * invW;
+        this.x = rx;
+        this.y = ry;
+        this.z = rz;
+        return this;
     }
-    public Vector3d mulProject(Matrix4dc mat, Vector3d dest) {
-        int prop = mat.properties();
-        if ((prop & Matrix4dc.PROPERTY_IDENTITY) != 0)
-            return dest.set(this);
-        if ((prop & Matrix4dc.PROPERTY_TRANSLATION) != 0)
-            return mulProjectTranslation(mat, dest);
-        if ((prop & Matrix4dc.PROPERTY_AFFINE) != 0)
-            return mulProjectAffine(mat, dest);
-        return mulProjectGeneric(mat, dest);
+
+    public Vector3d mulProject(Matrix4fc mat, Vector3d dest) {
+        double invW = 1.0 / Math.fma(mat.m03(), x, Math.fma(mat.m13(), y, Math.fma(mat.m23(), z, mat.m33())));
+        double rx = (mat.m00() * x + mat.m10() * y + mat.m20() * z + mat.m30()) * invW;
+        double ry = (mat.m01() * x + mat.m11() * y + mat.m21() * z + mat.m31()) * invW;
+        double rz = (mat.m02() * x + mat.m12() * y + mat.m22() * z + mat.m32()) * invW;
+        dest.x = rx;
+        dest.y = ry;
+        dest.z = rz;
+        return dest;
     }
+
     /**
-     * Multiply the given matrix <code>mat</code> with this vector and perform perspective division.
+     * Multiply the given matrix <code>mat</code> with this Vector3d, perform perspective division.
      * <p>
      * This method uses <code>w=1.0</code> as the fourth vector component.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
+     * 
      * @param mat
      *          the matrix to multiply this vector by
      * @return this
      */
     public Vector3d mulProject(Matrix4fc mat) {
-        int prop = mat.properties();
-        if ((prop & Matrix4fc.PROPERTY_IDENTITY) != 0)
-            return this;
-        if ((prop & Matrix4fc.PROPERTY_TRANSLATION) != 0)
-            return mulProjectTranslation(mat, this);
-        if ((prop & Matrix4fc.PROPERTY_AFFINE) != 0)
-            return mulProjectAffine(mat, this);
-        return mulProjectGeneric(mat, this);
-    }
-    public Vector3d mulProject(Matrix4fc mat, Vector3d dest) {
-        int prop = mat.properties();
-        if ((prop & Matrix4fc.PROPERTY_IDENTITY) != 0)
-            return dest.set(this);
-        if ((prop & Matrix4fc.PROPERTY_TRANSLATION) != 0)
-            return mulProjectTranslation(mat, dest);
-        if ((prop & Matrix4fc.PROPERTY_AFFINE) != 0)
-            return mulProjectAffine(mat, dest);
-        return mulProjectGeneric(mat, dest);
-    }
-    /**
-     * Multiply the given matrix <code>mat</code> with this vector and perform perspective division.
-     * <p>
-     * This method assumes that the matrix <code>mat</code> represents only a translation.
-     * <p>
-     * This method uses <code>w=1.0</code> as the fourth vector component.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the matrix to multiply this vector by
-     * @return this
-     */
-    public Vector3d mulProjectTranslation(Matrix4dc mat) {
-        return mulPositionTranslation(mat, this);
-    }
-    public Vector3d mulProjectTranslation(Matrix4dc mat, Vector3d dest) {
-        return mulPositionTranslation(mat, dest);
-    }
-    /**
-     * Multiply the given matrix <code>mat</code> with this vector and perform perspective division.
-     * <p>
-     * This method assumes that the matrix <code>mat</code> represents only a translation.
-     * <p>
-     * This method uses <code>w=1.0</code> as the fourth vector component.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the matrix to multiply this vector by
-     * @return this
-     */
-    public Vector3d mulProjectTranslation(Matrix4fc mat) {
-        return mulPositionTranslation(mat, this);
-    }
-    public Vector3d mulProjectTranslation(Matrix4fc mat, Vector3d dest) {
-        return mulPositionTranslation(mat, dest);
-    }
-    /**
-     * Multiply the given matrix <code>mat</code> with this vector and perform perspective division.
-     * <p>
-     * This method assumes that the matrix <code>mat</code> represents only an affine transformation.
-     * <p>
-     * This method uses <code>w=1.0</code> as the fourth vector component.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the matrix to multiply this vector by
-     * @return this
-     */
-    public Vector3d mulProjectAffine(Matrix4dc mat) {
-        return mulProjectAffine(mat, this);
-    }
-    public Vector3d mulProjectAffine(Matrix4dc mat, Vector3d dest) {
-        double x1 = this.x, y1 = this.y, z1 = this.z;
-        dest.x = Math.fma(mat.m00(), x1, Math.fma(mat.m10(), y1, mat.m20() * z1)) + mat.m30();
-        dest.y = Math.fma(mat.m01(), x1, Math.fma(mat.m11(), y1, mat.m21() * z1)) + mat.m31();
-        dest.z = Math.fma(mat.m02(), x1, Math.fma(mat.m12(), y1, mat.m22() * z1)) + mat.m32();
-        return dest;
-    }
-    /**
-     * Multiply the given matrix <code>mat</code> with this vector and perform perspective division.
-     * <p>
-     * This method assumes that the matrix <code>mat</code> represents only an affine transformation.
-     * <p>
-     * This method uses <code>w=1.0</code> as the fourth vector component.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the matrix to multiply this vector by
-     * @return this
-     */
-    public Vector3d mulProjectAffine(Matrix4fc mat) {
-        return mulProjectAffine(mat, this);
-    }
-    public Vector3d mulProjectAffine(Matrix4fc mat, Vector3d dest) {
-        double x = this.x, y = this.y, z = this.z;
-        dest.x = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, mat.m20() * z)) + mat.m30();
-        dest.y = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, mat.m21() * z)) + mat.m31();
-        dest.z = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, mat.m22() * z)) + mat.m32();
-        return dest;
-    }
-    /**
-     * Multiply the given matrix <code>mat</code> with this vector and perform perspective division.
-     * <p>
-     * This method makes no assumptions about the properties of the matrix <code>mat</code>.
-     * <p>
-     * This method uses <code>w=1.0</code> as the fourth vector component.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the matrix to multiply this vector by
-     * @return this
-     */
-    public Vector3d mulProjectGeneric(Matrix4dc mat) {
-        return mulProjectGeneric(mat, this);
-    }
-    public Vector3d mulProjectGeneric(Matrix4dc mat, Vector3d dest) {
-        double x = this.x, y = this.y, z = this.z;
         double invW = 1.0 / Math.fma(mat.m03(), x, Math.fma(mat.m13(), y, Math.fma(mat.m23(), z, mat.m33())));
-        dest.x = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30()))) * invW;
-        dest.y = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31()))) * invW;
-        dest.z = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32()))) * invW;
-        return dest;
-    }
-    /**
-     * Multiply the given matrix <code>mat</code> with this vector and perform perspective division.
-     * <p>
-     * This method makes no assumptions about the properties of the matrix <code>mat</code>.
-     * <p>
-     * This method uses <code>w=1.0</code> as the fourth vector component.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the matrix to multiply this vector by
-     * @return this
-     */
-    public Vector3d mulProjectGeneric(Matrix4fc mat) {
-        return mulProjectGeneric(mat, this);
-    }
-    public Vector3d mulProjectGeneric(Matrix4fc mat, Vector3d dest) {
-        double x = this.x, y = this.y, z = this.z;
-        double invW = 1.0 / Math.fma(mat.m03(), x, Math.fma(mat.m13(), y, Math.fma(mat.m23(), z, mat.m33())));
-        dest.x = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30()))) * invW;
-        dest.y = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31()))) * invW;
-        dest.z = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32()))) * invW;
-        return dest;
+        double rx = (mat.m00() * x + mat.m10() * y + mat.m20() * z + mat.m30()) * invW;
+        double ry = (mat.m01() * x + mat.m11() * y + mat.m21() * z + mat.m31()) * invW;
+        double rz = (mat.m02() * x + mat.m12() * y + mat.m22() * z + mat.m32()) * invW;
+        this.x = rx;
+        this.y = ry;
+        this.z = rz;
+        return this;
     }
 
     /**
-     * Multiply the given matrix <code>mat</code> with this vector.
+     * Multiply the given matrix <code>mat</code> with this Vector3d.
      * 
      * @param mat
      *          the matrix to multiply this vector by
      * @return this
      */
     public Vector3d mul(Matrix3fc mat) {
-        return mul(mat, this);
+        double rx = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, mat.m20() * z));
+        double ry = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, mat.m21() * z));
+        double rz = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, mat.m22() * z));
+        this.x = rx;
+        this.y = ry;
+        this.z = rz;
+        return this;
     }
 
     /**
-     * Multiply the given matrix <code>mat</code> with this vector.
+     * Multiply the given matrix <code>mat</code> with this Vector3d.
      * 
      * @param mat
      *          the matrix to multiply this vector by
      * @return this
      */
     public Vector3d mul(Matrix3dc mat) {
-        return mul(mat, this);
+        double rx = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, mat.m20() * z));
+        double ry = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, mat.m21() * z));
+        double rz = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, mat.m22() * z));
+        this.x = rx;
+        this.y = ry;
+        this.z = rz;
+        return this;
     }
 
     public Vector3d mul(Matrix3dc mat, Vector3d dest) {
@@ -1263,7 +1097,7 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
     }
 
     /**
-     * Multiply the given matrix with this vector by assuming a third row in the matrix of <code>(0, 0, 1)</code>
+     * Multiply the given matrix with this Vector3d by assuming a third row in the matrix of <code>(0, 0, 1)</code>
      * and store the result in <code>this</code>.
      * 
      * @param mat
@@ -1271,7 +1105,11 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d mul(Matrix3x2dc mat) {
-        return mul(mat, this);
+        double rx = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, mat.m20() * z));
+        double ry = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, mat.m21() * z));
+        this.x = rx;
+        this.y = ry;
+        return this;
     }
 
     public Vector3d mul(Matrix3x2dc mat, Vector3d dest) {
@@ -1284,7 +1122,7 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
     }
 
     /**
-     * Multiply the given matrix with this vector by assuming a third row in the matrix of <code>(0, 0, 1)</code>
+     * Multiply the given matrix with this Vector3d by assuming a third row in the matrix of <code>(0, 0, 1)</code>
      * and store the result in <code>this</code>.
      * 
      * @param mat
@@ -1292,7 +1130,11 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d mul(Matrix3x2fc mat) {
-        return mul(mat, this);
+        double rx = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, mat.m20() * z));
+        double ry = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, mat.m21() * z));
+        this.x = rx;
+        this.y = ry;
+        return this;
     }
 
     public Vector3d mul(Matrix3x2fc mat, Vector3d dest) {
@@ -1305,17 +1147,20 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
     }
 
     /**
-     * Multiply the transpose of the given matrix with this vector and store the result in <code>this</code>.
-     * <p>
-     * Note that this method performs the operation <code>M^T * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
+     * Multiply the transpose of the given matrix with this Vector3d and store the result in <code>this</code>.
      * 
      * @param mat
      *          the matrix
      * @return this
      */
     public Vector3d mulTranspose(Matrix3dc mat) {
-        return mulTranspose(mat, this);
+        double rx = Math.fma(mat.m00(), x, Math.fma(mat.m01(), y, mat.m02() * z));
+        double ry = Math.fma(mat.m10(), x, Math.fma(mat.m11(), y, mat.m12() * z));
+        double rz = Math.fma(mat.m20(), x, Math.fma(mat.m21(), y, mat.m22() * z));
+        this.x = rx;
+        this.y = ry;
+        this.z = rz;
+        return this;
     }
 
     public Vector3d mulTranspose(Matrix3dc mat, Vector3d dest) {
@@ -1329,17 +1174,20 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
     }
 
     /**
-     * Multiply the transpose of the given matrix with this vector and store the result in <code>this</code>.
-     * <p>
-     * Note that this method performs the operation <code>M^T * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
+     * Multiply the transpose of the given matrix with  this Vector3d and store the result in <code>this</code>.
      * 
      * @param mat
      *          the matrix
      * @return this
      */
     public Vector3d mulTranspose(Matrix3fc mat) {
-        return mulTranspose(mat, this);
+        double rx = Math.fma(mat.m00(), x, Math.fma(mat.m01(), y, mat.m02() * z));
+        double ry = Math.fma(mat.m10(), x, Math.fma(mat.m11(), y, mat.m12() * z));
+        double rz = Math.fma(mat.m20(), x, Math.fma(mat.m21(), y, mat.m22() * z));
+        this.x = rx;
+        this.y = ry;
+        this.z = rz;
+        return this;
     }
 
     public Vector3d mulTranspose(Matrix3fc mat, Vector3d dest) {
@@ -1356,146 +1204,38 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * Multiply the given 4x4 matrix <code>mat</code> with <code>this</code>.
      * <p>
      * This method assumes the <code>w</code> component of <code>this</code> to be <code>1.0</code>.
-     *
-     * @param mat
-     *          the matrix to multiply this vector by
-     * @return this
-     */
-    public Vector3d mulPosition(Matrix4dc mat) {
-        int prop = mat.properties();
-        if ((prop & Matrix4dc.PROPERTY_IDENTITY) != 0)
-            return this;
-        if ((prop & Matrix4dc.PROPERTY_TRANSLATION) != 0)
-            return mulPositionTranslation(mat, this);
-        return mulPositionGeneric(mat, this);
-    }
-    public Vector3d mulPosition(Matrix4dc mat, Vector3d dest) {
-        int prop = mat.properties();
-        if ((prop & Matrix4fc.PROPERTY_IDENTITY) != 0)
-            return dest.set(this);
-        if ((prop & Matrix4fc.PROPERTY_TRANSLATION) != 0)
-            return mulPositionTranslation(mat, dest);
-        return mulPositionGeneric(mat, dest);
-    }
-    public Vector3d mulPosition(Matrix4fc mat, Vector3d dest) {
-        int prop = mat.properties();
-        if ((prop & Matrix4fc.PROPERTY_IDENTITY) != 0)
-            return dest.set(this);
-        if ((prop & Matrix4fc.PROPERTY_TRANSLATION) != 0)
-            return mulPositionTranslation(mat, dest);
-        return mulPositionGeneric(mat, dest);
-    }
-    /**
-     * Multiply the given 4x4 matrix <code>mat</code> with <code>this</code>.
-     * <p>
-     * This method assumes the <code>w</code> component of <code>this</code> to be <code>1.0</code>.
-     *
+     * 
      * @param mat
      *          the matrix to multiply this vector by
      * @return this
      */
     public Vector3d mulPosition(Matrix4fc mat) {
-        int prop = mat.properties();
-        if ((prop & Matrix4fc.PROPERTY_IDENTITY) != 0)
-            return this;
-        if ((prop & Matrix4fc.PROPERTY_TRANSLATION) != 0)
-            return mulPositionTranslation(mat, this);
-        return mulPositionGeneric(mat, this);
-    }
-    /**
-     * Multiply the given 4x4 matrix <code>mat</code> with <code>this</code>.
-     * <p>
-     * This method assumes that the matrix <code>mat</code> represents only a translation.
-     * <p>
-     * This method assumes the <code>w</code> component of <code>this</code> to be <code>1.0</code>.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the matrix to multiply this vector by
-     * @return this
-     */
-    public Vector3d mulPositionTranslation(Matrix4dc mat) {
-        return mulPositionTranslation(mat, this);
-    }
-    public Vector3d mulPositionTranslation(Matrix4dc mat, Vector3d dest) {
-        dest.x = this.x + mat.m30();
-        dest.y = this.y + mat.m31();
-        dest.z = this.z + mat.m32();
-        return dest;
-    }
-    /**
-     * Multiply the given 4x4 matrix <code>mat</code> with <code>this</code>.
-     * <p>
-     * This method assumes that the matrix <code>mat</code> represents only a translation.
-     * <p>
-     * This method assumes the <code>w</code> component of <code>this</code> to be <code>1.0</code>.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the matrix to multiply this vector by
-     * @return this
-     */
-    public Vector3d mulPositionTranslation(Matrix4fc mat) {
-        return mulPositionTranslation(mat, this);
-    }
-    public Vector3d mulPositionTranslation(Matrix4fc mat, Vector3d dest) {
-        dest.x = this.x + mat.m30();
-        dest.y = this.y + mat.m31();
-        dest.z = this.z + mat.m32();
-        return dest;
+        double rx = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30())));
+        double ry = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31())));
+        double rz = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32())));
+        this.x = rx;
+        this.y = ry;
+        this.z = rz;
+        return this;
     }
 
     /**
      * Multiply the given 4x4 matrix <code>mat</code> with <code>this</code>.
      * <p>
-     * This method makes no assumptions about the properties of the matrix <code>mat</code>.
-     * <p>
      * This method assumes the <code>w</code> component of <code>this</code> to be <code>1.0</code>.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
+     * 
      * @param mat
      *          the matrix to multiply this vector by
      * @return this
      */
-    public Vector3d mulPositionGeneric(Matrix4dc mat) {
-        return mulPositionGeneric(mat, this);
-    }
-    public Vector3d mulPositionGeneric(Matrix4dc mat, Vector3d dest) {
-        double x = this.x, y = this.y, z = this.z;
-        dest.x = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30())));
-        dest.y = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31())));
-        dest.z = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32())));
-        return dest;
-    }
-    /**
-     * Multiply the given 4x4 matrix <code>mat</code> with <code>this</code>.
-     * <p>
-     * This method makes no assumptions about the properties of the matrix <code>mat</code>.
-     * <p>
-     * This method assumes the <code>w</code> component of <code>this</code> to be <code>1.0</code>.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the matrix to multiply this vector by
-     * @return this
-     */
-    public Vector3d mulPositionGeneric(Matrix4fc mat) {
-        return mulPositionGeneric(mat, this);
-    }
-    public Vector3d mulPositionGeneric(Matrix4fc mat, Vector3d dest) {
-        double x = this.x, y = this.y, z = this.z;
-        dest.x = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30())));
-        dest.y = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31())));
-        dest.z = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32())));
-        return dest;
+    public Vector3d mulPosition(Matrix4dc mat) {
+        double rx = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30())));
+        double ry = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31())));
+        double rz = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32())));
+        this.x = rx;
+        this.y = ry;
+        this.z = rz;
+        return this;
     }
 
     /**
@@ -1508,58 +1248,13 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d mulPosition(Matrix4x3dc mat) {
-        int prop = mat.properties();
-        if ((prop & Matrix4x3fc.PROPERTY_IDENTITY) != 0)
-            return this;
-        if ((prop & Matrix4x3fc.PROPERTY_TRANSLATION) != 0)
-            return mulPositionTranslation(mat, this);
-        return mulPositionGeneric(mat);
-    }
-    public Vector3d mulPositionTranslation(Matrix4x3dc mat, Vector3d dest) {
         double rx = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30())));
         double ry = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31())));
         double rz = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32())));
-        dest.x = rx;
-        dest.y = ry;
-        dest.z = rz;
-        return dest;
-    }
-    /**
-     * Multiply the given 4x3 matrix <code>mat</code>, representing only a translation, with <code>this</code>.
-     * <p>
-     * This method only works when <code>mat</code> only represents a translation.
-     * <p>
-     * This method assumes the <code>w</code> component of <code>this</code> to be <code>1.0</code>.
-     *
-     * @param mat
-     *          the matrix to multiply this vector by
-     * @return this
-     */
-    public Vector3d mulPositionTranslation(Matrix4x3dc mat) {
-        return mulPositionTranslation(mat, this);
-    }
-    public Vector3d mulPositionGeneric(Matrix4x3dc mat, Vector3d dest) {
-        double rx = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30())));
-        double ry = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31())));
-        double rz = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32())));
-        dest.x = rx;
-        dest.y = ry;
-        dest.z = rz;
-        return dest;
-    }
-    /**
-     * Multiply the given 4x3 matrix <code>mat</code> with <code>this</code>.
-     * <p>
-     * This method makes no assumptions about the properties of the matrix <code>mat</code>.
-     * <p>
-     * This method assumes the <code>w</code> component of <code>this</code> to be <code>1.0</code>.
-     *
-     * @param mat
-     *          the matrix to multiply this vector by
-     * @return this
-     */
-    public Vector3d mulPositionGeneric(Matrix4x3dc mat) {
-        return mulPositionGeneric(mat, this);
+        this.x = rx;
+        this.y = ry;
+        this.z = rz;
+        return this;
     }
 
     /**
@@ -1572,28 +1267,16 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d mulPosition(Matrix4x3fc mat) {
-        int prop = mat.properties();
-        if ((prop & Matrix4x3fc.PROPERTY_IDENTITY) != 0)
-            return this;
-        if ((prop & Matrix4x3fc.PROPERTY_TRANSLATION) != 0)
-            return mulPositionTranslation(mat, this);
-        return mulPositionGeneric(mat, this);
+        double rx = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30())));
+        double ry = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31())));
+        double rz = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32())));
+        this.x = rx;
+        this.y = ry;
+        this.z = rz;
+        return this;
     }
-    /**
-     * Multiply the given 4x3 matrix <code>mat</code>, representing only a translation, with <code>this</code>.
-     * <p>
-     * This method only works when <code>mat</code> only represents a translation.
-     * <p>
-     * This method assumes the <code>w</code> component of <code>this</code> to be <code>1.0</code>.
-     *
-     * @param mat
-     *          the matrix to multiply this vector by
-     * @return this
-     */
-    public Vector3d mulPositionTranslation(Matrix4x3fc mat) {
-        return mulPositionTranslation(mat, this);
-    }
-    public Vector3d mulPositionTranslation(Matrix4x3fc mat, Vector3d dest) {
+
+    public Vector3d mulPosition(Matrix4dc mat, Vector3d dest) {
         double rx = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30())));
         double ry = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31())));
         double rz = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32())));
@@ -1602,21 +1285,8 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
         dest.z = rz;
         return dest;
     }
-    /**
-     * Multiply the given 4x3 matrix <code>mat</code> with <code>this</code>.
-     * <p>
-     * This method makes no assumptions about the properties of the matrix <code>mat</code>.
-     * <p>
-     * This method assumes the <code>w</code> component of <code>this</code> to be <code>1.0</code>.
-     *
-     * @param mat
-     *          the matrix to multiply this vector by
-     * @return this
-     */
-    public Vector3d mulPositionGeneric(Matrix4x3fc mat) {
-        return mulPositionGeneric(mat, this);
-    }
-    public Vector3d mulPositionGeneric(Matrix4x3fc mat, Vector3d dest) {
+
+    public Vector3d mulPosition(Matrix4fc mat, Vector3d dest) {
         double rx = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30())));
         double ry = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31())));
         double rz = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32())));
@@ -1627,12 +1297,13 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
     }
 
     public Vector3d mulPosition(Matrix4x3dc mat, Vector3d dest) {
-        int prop = mat.properties();
-        if ((prop & Matrix4x3fc.PROPERTY_IDENTITY) != 0)
-            return dest.set(this);
-        if ((prop & Matrix4x3fc.PROPERTY_TRANSLATION) != 0)
-            return mulPositionTranslation(mat, dest);
-        return mulPositionGeneric(mat, dest);
+        double rx = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30())));
+        double ry = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31())));
+        double rz = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32())));
+        dest.x = rx;
+        dest.y = ry;
+        dest.z = rz;
+        return dest;
     }
 
     public Vector3d mulPosition(Matrix4x3fc mat, Vector3d dest) {
@@ -1649,16 +1320,19 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * Multiply the transpose of the given 4x4 matrix <code>mat</code> with <code>this</code>.
      * <p>
      * This method assumes the <code>w</code> component of <code>this</code> to be <code>1.0</code>.
-     * <p>
-     * Note that this method performs the operation <code>M^T * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
      * 
      * @param mat
      *          the matrix whose transpose to multiply this vector by
      * @return this
      */
     public Vector3d mulTransposePosition(Matrix4dc mat) {
-        return mulTransposePosition(mat, this);
+        double rx = Math.fma(mat.m00(), x, Math.fma(mat.m01(), y, Math.fma(mat.m02(), z, mat.m03())));
+        double ry = Math.fma(mat.m10(), x, Math.fma(mat.m11(), y, Math.fma(mat.m12(), z, mat.m13())));
+        double rz = Math.fma(mat.m20(), x, Math.fma(mat.m21(), y, Math.fma(mat.m22(), z, mat.m23())));
+        this.x = rx;
+        this.y = ry;
+        this.z = rz;
+        return this;
     }
 
     public Vector3d mulTransposePosition(Matrix4dc mat, Vector3d dest) {
@@ -1675,16 +1349,19 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * Multiply the transpose of the given 4x4 matrix <code>mat</code> with <code>this</code>.
      * <p>
      * This method assumes the <code>w</code> component of <code>this</code> to be <code>1.0</code>.
-     * <p>
-     * Note that this method performs the operation <code>M^T * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
      * 
      * @param mat
      *          the matrix whose transpose to multiply this vector by
      * @return this
      */
     public Vector3d mulTransposePosition(Matrix4fc mat) {
-        return mulTransposePosition(mat, this);
+        double rx = Math.fma(mat.m00(), x, Math.fma(mat.m01(), y, Math.fma(mat.m02(), z, mat.m03())));
+        double ry = Math.fma(mat.m10(), x, Math.fma(mat.m11(), y, Math.fma(mat.m12(), z, mat.m13())));
+        double rz = Math.fma(mat.m20(), x, Math.fma(mat.m21(), y, Math.fma(mat.m22(), z, mat.m23())));
+        this.x = rx;
+        this.y = ry;
+        this.z = rz;
+        return this;
     }
 
     public Vector3d mulTransposePosition(Matrix4fc mat, Vector3d dest) {
@@ -1708,7 +1385,14 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return the <i>w</i> component of the resulting 4D vector after multiplication
      */
     public double mulPositionW(Matrix4fc mat) {
-        return mulPositionW(mat, this);
+        double w = Math.fma(mat.m03(), x, Math.fma(mat.m13(), y, Math.fma(mat.m23(), z, mat.m33())));
+        double rx = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30())));
+        double ry = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31())));
+        double rz = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32())));
+        this.x = rx;
+        this.y = ry;
+        this.z = rz;
+        return w;
     }
 
     public double mulPositionW(Matrix4fc mat, Vector3d dest) {
@@ -1733,7 +1417,14 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return the <i>w</i> component of the resulting 4D vector after multiplication
      */
     public double mulPositionW(Matrix4dc mat) {
-        return mulPositionW(mat, this);
+        double w = Math.fma(mat.m03(), x, Math.fma(mat.m13(), y, Math.fma(mat.m23(), z, mat.m33())));
+        double rx = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30())));
+        double ry = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31())));
+        double rz = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32())));
+        this.x = rx;
+        this.y = ry;
+        this.z = rz;
+        return w;
     }
 
     public double mulPositionW(Matrix4dc mat, Vector3d dest) {
@@ -1757,7 +1448,13 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d mulDirection(Matrix4fc mat) {
-        return mulDirection(mat, this);
+        double rx = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, mat.m20() * z));
+        double ry = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, mat.m21() * z));
+        double rz = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, mat.m22() * z));
+        this.x = rx;
+        this.y = ry;
+        this.z = rz;
+        return this;
     }
 
     /**
@@ -1770,7 +1467,13 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d mulDirection(Matrix4dc mat) {
-        return mulDirection(mat, this);
+        double rx = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, mat.m20() * z));
+        double ry = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, mat.m21() * z));
+        double rz = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, mat.m22() * z));
+        this.x = rx;
+        this.y = ry;
+        this.z = rz;
+        return this;
     }
 
     /**
@@ -1783,7 +1486,13 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d mulDirection(Matrix4x3dc mat) {
-        return mulDirection(mat, this);
+        double rx = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, mat.m20() * z));
+        double ry = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, mat.m21() * z));
+        double rz = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, mat.m22() * z));
+        this.x = rx;
+        this.y = ry;
+        this.z = rz;
+        return this;
     }
 
     /**
@@ -1796,7 +1505,13 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d mulDirection(Matrix4x3fc mat) {
-        return mulDirection(mat, this);
+        double rx = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, mat.m20() * z));
+        double ry = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, mat.m21() * z));
+        double rz = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, mat.m22() * z));
+        this.x = rx;
+        this.y = ry;
+        this.z = rz;
+        return this;
     }
 
     public Vector3d mulDirection(Matrix4dc mat, Vector3d dest) {
@@ -1843,16 +1558,19 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * Multiply the transpose of the given 4x4 matrix <code>mat</code> with <code>this</code>.
      * <p>
      * This method assumes the <code>w</code> component of <code>this</code> to be <code>0.0</code>.
-     * <p>
-     * Note that this method performs the operation <code>M^T * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
      * 
      * @param mat
      *          the matrix whose transpose to multiply this vector by
      * @return this
      */
     public Vector3d mulTransposeDirection(Matrix4dc mat) {
-        return mulTransposeDirection(mat, this);
+        double rx = Math.fma(mat.m00(), x, Math.fma(mat.m01(), y, mat.m02() * z));
+        double ry = Math.fma(mat.m10(), x, Math.fma(mat.m11(), y, mat.m12() * z));
+        double rz = Math.fma(mat.m20(), x, Math.fma(mat.m21(), y, mat.m22() * z));
+        this.x = rx;
+        this.y = ry;
+        this.z = rz;
+        return this;
     }
 
     public Vector3d mulTransposeDirection(Matrix4dc mat, Vector3d dest) {
@@ -1869,16 +1587,19 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * Multiply the transpose of the given 4x4 matrix <code>mat</code> with <code>this</code>.
      * <p>
      * This method assumes the <code>w</code> component of <code>this</code> to be <code>0.0</code>.
-     * <p>
-     * Note that this method performs the operation <code>M^T * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
      * 
      * @param mat
      *          the matrix whose transpose to multiply this vector by
      * @return this
      */
     public Vector3d mulTransposeDirection(Matrix4fc mat) {
-        return mulTransposeDirection(mat, this);
+        double rx = Math.fma(mat.m00(), x, Math.fma(mat.m01(), y, mat.m02() * z));
+        double ry = Math.fma(mat.m10(), x, Math.fma(mat.m11(), y, mat.m12() * z));
+        double rz = Math.fma(mat.m20(), x, Math.fma(mat.m21(), y, mat.m22() * z));
+        this.x = rx;
+        this.y = ry;
+        this.z = rz;
+        return this;
     }
 
     public Vector3d mulTransposeDirection(Matrix4fc mat, Vector3d dest) {
@@ -1892,14 +1613,17 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
     }
 
     /**
-     * Multiply this vector by the given scalar value.
+     * Multiply this Vector3d by the given scalar value.
      * 
      * @param scalar
      *          the scalar to multiply this vector by
      * @return this
      */
     public Vector3d mul(double scalar) {
-        return this.mul(scalar, this);
+        this.x = x * scalar;
+        this.y = y * scalar;
+        this.z = z * scalar;
+        return this;
     }
 
     public Vector3d mul(double scalar, Vector3d dest) {
@@ -1910,7 +1634,7 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
     }
 
     /**
-     * Multiply the components of this vector by the given scalar values and store the result in <code>this</code>.
+     * Multiply the components of this Vector3d by the given scalar values and store the result in <code>this</code>.
      * 
      * @param x
      *          the x component to multiply this vector by
@@ -1921,7 +1645,10 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d mul(double x, double y, double z) {
-        return this.mul(x, y, z, this);
+        this.x = this.x * x;
+        this.y = this.y * y;
+        this.z = this.z * z;
+        return this;
     }
 
     public Vector3d mul(double x, double y, double z, Vector3d dest) {
@@ -1958,10 +1685,6 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
 
     /**
      * Rotate this vector the specified radians around the given rotation axis.
-     * <p>
-     * If the rotation axis is either <code>(1, 0, 0)</code>, <code>(0, 1, 0)</code> or <code>(0, 0, 1)</code>,
-     * then {@link #rotateX(double) rotateX()}, {@link #rotateY(double) rotateY()} or
-     * {@link #rotateZ(double) rotateZ()}, respectively, should be used instead.
      * 
      * @param angle
      *          the angle in radians
@@ -1974,7 +1697,13 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d rotateAxis(double angle, double x, double y, double z) {
-        return rotateAxis(angle, x, y, z, this);
+        if (y == 0.0 && z == 0.0 && Math.absEqualsOne(x))
+            return rotateX(x * angle, this);
+        else if (x == 0.0 && z == 0.0 && Math.absEqualsOne(y))
+            return rotateY(y * angle, this);
+        else if (x == 0.0 && y == 0.0 && Math.absEqualsOne(z))
+            return rotateZ(z * angle, this);
+        return rotateAxisInternal(angle, x, y, z, this);
     }
 
     public Vector3d rotateAxis(double angle, double aX, double aY, double aZ, Vector3d dest) {
@@ -2011,7 +1740,12 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d rotateX(double angle) {
-        return rotateX(angle, this);
+        double sin = Math.sin(angle), cos = Math.cosFromSin(sin, angle);
+        double y = this.y * cos - this.z * sin;
+        double z = this.y * sin + this.z * cos;
+        this.y = y;
+        this.z = z;
+        return this;
     }
 
     public Vector3d rotateX(double angle, Vector3d dest) {
@@ -2032,7 +1766,12 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d rotateY(double angle) {
-        return rotateY(angle, this);
+        double sin = Math.sin(angle), cos = Math.cosFromSin(sin, angle);
+        double x =  this.x * cos + this.z * sin;
+        double z = -this.x * sin + this.z * cos;
+        this.x = x;
+        this.z = z;
+        return this;
     }
 
     public Vector3d rotateY(double angle, Vector3d dest) {
@@ -2053,7 +1792,12 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d rotateZ(double angle) {
-        return rotateZ(angle, this);
+        double sin = Math.sin(angle), cos = Math.cosFromSin(sin, angle);
+        double x = this.x * cos - this.y * sin;
+        double y = this.x * sin + this.y * cos;
+        this.x = x;
+        this.y = y;
+        return this;
     }
 
     public Vector3d rotateZ(double angle, Vector3d dest) {
@@ -2067,14 +1811,18 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
     }
 
     /**
-     * Divide this vector by the given scalar value.
+     * Divide this Vector3d by the given scalar value.
      * 
      * @param scalar
      *          the scalar to divide this vector by
      * @return this
      */
     public Vector3d div(double scalar) {
-        return div(scalar, this);
+        double inv = 1.0 / scalar;
+        this.x = x * inv;
+        this.y = y * inv;
+        this.z = z * inv;
+        return this;
     }
 
     public Vector3d div(double scalar, Vector3d dest) {
@@ -2086,7 +1834,7 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
     }
 
     /**
-     * Divide the components of this vector by the given scalar values and store the result in <code>this</code>.
+     * Divide the components of this Vector3d by the given scalar values and store the result in <code>this</code>.
      * 
      * @param x
      *          the x component to divide this vector by
@@ -2097,7 +1845,10 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d div(double x, double y, double z) {
-        return div(x, y, z, this);
+        this.x = this.x / x;
+        this.y = this.y / y;
+        this.z = this.z / z;
+        return this;
     }
 
     public Vector3d div(double x, double y, double z, Vector3d dest) {
@@ -2151,7 +1902,11 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d normalize() {
-        return normalize(this);
+        double invLength = Math.invsqrt(Math.fma(x, x, Math.fma(y, y, z * z)));
+        this.x = x * invLength;
+        this.y = y * invLength;
+        this.z = z * invLength;
+        return this;
     }
 
     public Vector3d normalize(Vector3d dest) {
@@ -2170,7 +1925,11 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d normalize(double length) {
-        return normalize(length, this);
+        double invLength = Math.invsqrt(Math.fma(x, x, Math.fma(y, y, z * z))) * length;
+        this.x = x * invLength;
+        this.y = y * invLength;
+        this.z = z * invLength;
+        return this;
     }
 
     public Vector3d normalize(double length, Vector3d dest) {
@@ -2189,7 +1948,13 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d cross(Vector3dc v) {
-        return cross(v, this);
+        double rx = Math.fma(y, v.z(), -z * v.y());
+        double ry = Math.fma(z, v.x(), -x * v.z());
+        double rz = Math.fma(x, v.y(), -y * v.x());
+        this.x = rx;
+        this.y = ry;
+        this.z = rz;
+        return this;
     }
 
     /**
@@ -2204,7 +1969,13 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d cross(double x, double y, double z) {
-        return cross(x, y, z, this);
+        double rx = Math.fma(this.y, z, -this.z * y);
+        double ry = Math.fma(this.z, x, -this.x * z);
+        double rz = Math.fma(this.x, y, -this.y * x);
+        this.x = rx;
+        this.y = ry;
+        this.z = rz;
+        return this;
     }
 
     public Vector3d cross(Vector3dc v, Vector3d dest) {
@@ -2346,7 +2117,10 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d min(Vector3dc v) {
-        return min(v, this);
+        this.x = x < v.x() ? x : v.x();
+        this.y = y < v.y() ? y : v.y();
+        this.z = z < v.z() ? z : v.z();
+        return this;
     }
 
     public Vector3d min(Vector3dc v, Vector3d dest) {
@@ -2364,7 +2138,10 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d max(Vector3dc v) {
-        return max(v, this);
+        this.x = x > v.x() ? x : v.x();
+        this.y = y > v.y() ? y : v.y();
+        this.z = z > v.z() ? z : v.z();
+        return this;
     }
 
     public Vector3d max(Vector3dc v, Vector3d dest) {
@@ -2393,9 +2170,9 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * 
      * @return the string representation
      */
-    public String toString() {
+    /*public String toString() {
         return Runtime.formatNumbers(toString(Options.NUMBER_FORMAT));
-    }
+    }*/
 
     /**
      * Return a string representation of this vector by formatting the vector components with the given {@link NumberFormat}.
@@ -2404,11 +2181,11 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      *          the {@link NumberFormat} used to format the vector components with
      * @return the string representation
      */
-    public String toString(NumberFormat formatter) {
+    /*public String toString(NumberFormat formatter) {
         return "(" + Runtime.format(x, formatter) + " " + Runtime.format(y, formatter) + " " + Runtime.format(z, formatter) + ")";
-    }
+    }*/
 
-    public void writeExternal(ObjectOutput out) throws IOException {
+    /*public void writeExternal(ObjectOutput out) throws IOException {
         out.writeDouble(x);
         out.writeDouble(y);
         out.writeDouble(z);
@@ -2419,7 +2196,7 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
         x = in.readDouble();
         y = in.readDouble();
         z = in.readDouble();
-    }
+    }*/
 
     /**
      * Negate this vector.
@@ -2427,7 +2204,10 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d negate() {
-        return negate(this);
+        this.x = -x;
+        this.y = -y;
+        this.z = -z;
+        return this;
     }
 
     public Vector3d negate(Vector3d dest) {
@@ -2443,7 +2223,10 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
      * @return this
      */
     public Vector3d absolute() {
-        return absolute(this);
+        this.x = Math.abs(this.x);
+        this.y = Math.abs(this.y);
+        this.z = Math.abs(this.z);
+        return this;
     }
 
     public Vector3d absolute(Vector3d dest) {
@@ -2488,7 +2271,7 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
             return true;
         if (v == null)
             return false;
-        if (getClass() != v.getClass())
+        if (!(v instanceof Vector3dc))
             return false;
         if (!Runtime.equals(x, v.x(), delta))
             return false;
@@ -2821,8 +2604,8 @@ public class Vector3d implements Externalizable, Cloneable, Vector3dc {
         return Math.isFinite(x) && Math.isFinite(y) && Math.isFinite(z);
     }
 
-    public Object clone() throws CloneNotSupportedException {
+    /*public Object clone() throws CloneNotSupportedException {
         return super.clone();
-    }
+    }*/
 
 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2015-2023 Richard Greenlees
+ * Copyright (c) 2015-2022 Richard Greenlees
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,15 +23,9 @@
  */
 package org.joml;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-//#ifdef __HAS_NIO__
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
-//#endif
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -46,9 +40,9 @@ import java.text.NumberFormat;
  * @author Richard Greenlees
  * @author Kai Burjack
  */
-public class Matrix3d implements Externalizable, Cloneable, Matrix3dc {
+public class Matrix3d implements /*Externalizable, Cloneable,*/ Matrix3dc {
 
-    private static final long serialVersionUID = 1L;
+    //private static final long serialVersionUID = 1L;
 
     public double m00, m01, m02;
     public double m10, m11, m12;
@@ -161,7 +155,6 @@ public class Matrix3d implements Externalizable, Cloneable, Matrix3dc {
         this.m22 = m22;
     }
 
-//#ifdef __HAS_NIO__
     /**
      * Create a new {@link Matrix3d} by reading its 9 double components from the given {@link DoubleBuffer}
      * at the buffer's current position.
@@ -176,7 +169,6 @@ public class Matrix3d implements Externalizable, Cloneable, Matrix3dc {
     public Matrix3d(DoubleBuffer buffer) {
         MemUtil.INSTANCE.get(this, buffer.position(), buffer);
     }
-//#endif
 
     /**
      * Create a new {@link Matrix3d} and initialize its three columns using the supplied vectors.
@@ -428,8 +420,6 @@ public class Matrix3d implements Externalizable, Cloneable, Matrix3dc {
      * @return this
      */
     public Matrix3d set(Matrix3dc m) {
-        if (m == this)
-            return this;
         m00 = m.m00();
         m01 = m.m01();
         m02 = m.m02();
@@ -867,14 +857,14 @@ public class Matrix3d implements Externalizable, Cloneable, Matrix3dc {
     }
 
     /**
-     * Set the values in this matrix based on the supplied double array in column-major order.. The result looks like this:
+     * Set the values in this matrix based on the supplied double array. The result looks like this:
      * <p>
      * 0, 3, 6<br>
      * 1, 4, 7<br>
      * 2, 5, 8<br>
      * <p>
-     * This method only uses the first 9 values, all others are ignored.
-     *
+     * Only uses the first 9 values, all others are ignored.
+     * 
      * @param m
      *          the array to read the matrix values from
      * @return this
@@ -893,41 +883,13 @@ public class Matrix3d implements Externalizable, Cloneable, Matrix3dc {
     }
 
     /**
-     * Set the values in this matrix based on the supplied array in column-major order. The result looks like this:
-     * <p>
-     * 0, 3, 6<br>
-     * 1, 4, 7<br>
-     * 2, 5, 8<br>
-     * <p>
-     * This method only uses the 9 values starting at the given offset.
-     *
-     * @param m
-     *          the array to read the matrix values from
-     * @param off
-     *          the offset into the array
-     * @return this
-     */
-    public Matrix3d set(double m[], int off) {
-        m00 = m[off+0];
-        m01 = m[off+1];
-        m02 = m[off+2];
-        m10 = m[off+3];
-        m11 = m[off+4];
-        m12 = m[off+5];
-        m20 = m[off+6];
-        m21 = m[off+7];
-        m22 = m[off+8];
-        return this;
-    }
-
-    /**
      * Set the values in this matrix based on the supplied double array. The result looks like this:
      * <p>
      * 0, 3, 6<br>
      * 1, 4, 7<br>
      * 2, 5, 8<br>
      * <p>
-     * This method only uses the first 9 values, all others are ignored.
+     * Only uses the first 9 values, all others are ignored
      *
      * @param m
      *          the array to read the matrix values from
@@ -943,34 +905,6 @@ public class Matrix3d implements Externalizable, Cloneable, Matrix3dc {
         m20 = m[6];
         m21 = m[7];
         m22 = m[8];
-        return this;
-    }
-
-    /**
-     * Set the values in this matrix based on the supplied array in column-major order. The result looks like this:
-     * <p>
-     * 0, 3, 6<br>
-     * 1, 4, 7<br>
-     * 2, 5, 8<br>
-     * <p>
-     * This method only uses the 9 values starting at the given offset.
-     *
-     * @param m
-     *          the array to read the matrix values from
-     * @param off
-     *          the offset into the array
-     * @return this
-     */
-    public Matrix3d set(float m[], int off) {
-        m00 = m[off+0];
-        m01 = m[off+1];
-        m02 = m[off+2];
-        m10 = m[off+3];
-        m11 = m[off+4];
-        m12 = m[off+5];
-        m20 = m[off+6];
-        m21 = m[off+7];
-        m22 = m[off+8];
         return this;
     }
 
@@ -1039,7 +973,7 @@ public class Matrix3d implements Externalizable, Cloneable, Matrix3dc {
      * 
      * @return the string representation
      */
-    public String toString() {
+    /*public String toString() {
         String str = toString(Options.NUMBER_FORMAT);
         StringBuffer res = new StringBuffer();
         int eIndex = Integer.MIN_VALUE;
@@ -1057,7 +991,7 @@ public class Matrix3d implements Externalizable, Cloneable, Matrix3dc {
             res.append(c);
         }
         return res.toString();
-    }
+    }*/
 
     /**
      * Return a string representation of this matrix by formatting the matrix elements with the given {@link NumberFormat}.
@@ -1066,11 +1000,11 @@ public class Matrix3d implements Externalizable, Cloneable, Matrix3dc {
      *          the {@link NumberFormat} used to format the matrix values with
      * @return the string representation
      */
-    public String toString(NumberFormat formatter) {
+    /*public String toString(NumberFormat formatter) {
         return Runtime.format(m00, formatter) + " " + Runtime.format(m10, formatter) + " " + Runtime.format(m20, formatter) + "\n"
              + Runtime.format(m01, formatter) + " " + Runtime.format(m11, formatter) + " " + Runtime.format(m21, formatter) + "\n"
              + Runtime.format(m02, formatter) + " " + Runtime.format(m12, formatter) + " " + Runtime.format(m22, formatter) + "\n";
-    }
+    }*/
 
     /**
      * Get the current values of <code>this</code> matrix and store them into
@@ -1109,7 +1043,6 @@ public class Matrix3d implements Externalizable, Cloneable, Matrix3dc {
         return dest.setFromNormalized(this);
     }
 
-//#ifdef __HAS_NIO__
     public DoubleBuffer get(DoubleBuffer buffer) {
         return get(buffer.position(), buffer);
     }
@@ -1181,22 +1114,13 @@ public class Matrix3d implements Externalizable, Cloneable, Matrix3dc {
         MemUtil.INSTANCE.putfTransposed(this, index, buffer);
         return buffer;
     }
-//#endif
 
-//#ifdef __HAS_UNSAFE__
     public Matrix3dc getToAddress(long address) {
         if (Options.NO_UNSAFE)
             throw new UnsupportedOperationException("Not supported when using joml.nounsafe");
-        MemUtil.MemUtilUnsafe.put(this, address);
+        //MemUtil.MemUtilUnsafe.put(this, address);
         return this;
     }
-    public Matrix3dc getTransposedToAddress(long address) {
-        if (Options.NO_UNSAFE)
-            throw new UnsupportedOperationException("Not supported when using joml.nounsafe");
-        MemUtil.MemUtilUnsafe.putTransposed(this, address);
-        return this;
-    }
-//#endif
 
     public double[] get(double[] arr, int offset) {
         arr[offset+0] = m00;
@@ -1232,7 +1156,6 @@ public class Matrix3d implements Externalizable, Cloneable, Matrix3dc {
         return get(arr, 0);
     }
 
-//#ifdef __HAS_NIO__
     /**
      * Set the values of this matrix by reading 9 double values from the given {@link DoubleBuffer} in column-major order,
      * starting at its current position.
@@ -1376,8 +1299,6 @@ public class Matrix3d implements Externalizable, Cloneable, Matrix3dc {
         MemUtil.INSTANCE.getf(this, index, buffer);
         return this;
     }
-//#endif
-//#ifdef __HAS_UNSAFE__
     /**
      * Set the values of this matrix by reading 9 double values from off-heap memory in column-major order,
      * starting at the given address.
@@ -1393,28 +1314,9 @@ public class Matrix3d implements Externalizable, Cloneable, Matrix3dc {
     public Matrix3d setFromAddress(long address) {
         if (Options.NO_UNSAFE)
             throw new UnsupportedOperationException("Not supported when using joml.nounsafe");
-        MemUtil.MemUtilUnsafe.get(this, address);
+        //MemUtil.MemUtilUnsafe.get(this, address);
         return this;
     }
-    /**
-     * Set the values of this matrix by reading 9 double values from off-heap memory in row-major order,
-     * starting at the given address.
-     * <p>
-     * This method will throw an {@link UnsupportedOperationException} when JOML is used with `-Djoml.nounsafe`.
-     * <p>
-     * <em>This method is unsafe as it can result in a crash of the JVM process when the specified address range does not belong to this process.</em>
-     *
-     * @param address
-     *              the off-heap memory address to read the matrix values from in row-major order
-     * @return this
-     */
-    public Matrix3d setTransposedFromAddress(long address) {
-        if (Options.NO_UNSAFE)
-            throw new UnsupportedOperationException("Not supported when using joml.nounsafe");
-        MemUtil.MemUtilUnsafe.getTransposed(this, address);
-        return this;
-    }
-//#endif
 
     /**
      * Set the three columns of this matrix to the supplied vectors, respectively.
@@ -2192,7 +2094,7 @@ public class Matrix3d implements Externalizable, Cloneable, Matrix3dc {
                         Math.fma(m20, x, Math.fma(m21, y, m22 * z)));
     }
 
-    public void writeExternal(ObjectOutput out) throws IOException {
+    /*public void writeExternal(ObjectOutput out) throws IOException {
         out.writeDouble(m00);
         out.writeDouble(m01);
         out.writeDouble(m02);
@@ -2214,7 +2116,7 @@ public class Matrix3d implements Externalizable, Cloneable, Matrix3dc {
         m20 = in.readDouble();
         m21 = in.readDouble();
         m22 = in.readDouble();
-    }
+    }*/
 
     public Matrix3d rotateX(double ang, Matrix3d dest) {
         double sin, cos;
@@ -4169,7 +4071,7 @@ public class Matrix3d implements Externalizable, Cloneable, Matrix3dc {
             return true;
         if (obj == null)
             return false;
-        if (!(obj instanceof Matrix3d))
+        if (getClass() != obj.getClass())
             return false;
         Matrix3d other = (Matrix3d) obj;
         if (Double.doubleToLongBits(m00) != Double.doubleToLongBits(other.m00))
@@ -4197,6 +4099,8 @@ public class Matrix3d implements Externalizable, Cloneable, Matrix3dc {
         if (this == m)
             return true;
         if (m == null)
+            return false;
+        if (!(m instanceof Matrix3d))
             return false;
         if (!Runtime.equals(m00, m.m00(), delta))
             return false;
@@ -4635,13 +4539,6 @@ public class Matrix3d implements Externalizable, Cloneable, Matrix3dc {
         dest.x = Math.atan2(-m21, m22);
         dest.y = Math.atan2(m20, Math.sqrt(1.0 - m20 * m20));
         dest.z = Math.atan2(-m10, m00);
-        return dest;
-    }
-
-    public Vector3d getEulerAnglesYXZ(Vector3d dest) {
-        dest.x = Math.atan2(-m21, Math.sqrt(1.0 - m21 * m21));
-        dest.y = Math.atan2(m20, m22);
-        dest.z = Math.atan2(m01, m11);
         return dest;
     }
 
@@ -5710,8 +5607,8 @@ public class Matrix3d implements Externalizable, Cloneable, Matrix3dc {
         return dest._m00(m00)._m01(m01)._m02(m02)._m10(m10)._m11(m11)._m12(m12)._m20(-m20)._m21(-m21)._m22(-m22);
     }
 
-    public Object clone() throws CloneNotSupportedException {
+    /*public Object clone() throws CloneNotSupportedException {
         return super.clone();
-    }
+    }*/
 
 }

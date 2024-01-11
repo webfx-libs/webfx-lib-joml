@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2016-2023 Kai Burjack
+ * Copyright (c) 2016-2022 Kai Burjack
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,8 @@
  */
 package org.joml;
 
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+
+import java.util.*;
 
 /**
  * Class for polygon/point intersection tests when testing many points against one or many static concave or convex, simple polygons.
@@ -324,3 +321,4 @@ public class PolygonsIntersection {
     }
 
 }
+

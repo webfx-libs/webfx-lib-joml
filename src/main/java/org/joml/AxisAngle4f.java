@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2015-2023 Kai Burjack
+ * Copyright (c) 2015-2022 Kai Burjack
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,6 @@
  */
 package org.joml;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -38,9 +34,9 @@ import java.text.NumberFormat;
  * 
  * @author Kai Burjack
  */
-public class AxisAngle4f implements Externalizable, Cloneable {
+public class AxisAngle4f /*implements Externalizable, Cloneable*/ {
 
-    private static final long serialVersionUID = 1L;
+    //private static final long serialVersionUID = 1L;
 
     /**
      * The angle in radians.
@@ -647,7 +643,7 @@ public class AxisAngle4f implements Externalizable, Cloneable {
         return dest.set(this);
     }
 
-    public void writeExternal(ObjectOutput out) throws IOException {
+    /*public void writeExternal(ObjectOutput out) throws IOException {
         out.writeFloat(angle);
         out.writeFloat(x);
         out.writeFloat(y);
@@ -659,7 +655,7 @@ public class AxisAngle4f implements Externalizable, Cloneable {
         x = in.readFloat();
         y = in.readFloat();
         z = in.readFloat();
-    }
+    }*/
 
     /**
      * Normalize the axis vector.
@@ -759,9 +755,9 @@ public class AxisAngle4f implements Externalizable, Cloneable {
      * 
      * @return the string representation
      */
-    public String toString() {
+    /*public String toString() {
         return Runtime.formatNumbers(toString(Options.NUMBER_FORMAT));
-    }
+    }*/
 
     /**
      * Return a string representation of this {@link AxisAngle4f} by formatting the components with the given {@link NumberFormat}.
@@ -770,9 +766,9 @@ public class AxisAngle4f implements Externalizable, Cloneable {
      *          the {@link NumberFormat} used to format the vector components with
      * @return the string representation
      */
-    public String toString(NumberFormat formatter) {
+    /*public String toString(NumberFormat formatter) {
         return "(" + Runtime.format(x, formatter) + " " + Runtime.format(y, formatter) + " " + Runtime.format(z, formatter) + " <| " + Runtime.format(angle, formatter) + ")";
-    }
+    }*/
 
     public int hashCode() {
         final int prime = 31;
@@ -806,8 +802,8 @@ public class AxisAngle4f implements Externalizable, Cloneable {
         return true;
     }
 
-    public Object clone() throws CloneNotSupportedException {
+    /*public Object clone() throws CloneNotSupportedException {
         return super.clone();
-    }
+    }*/
 
 }

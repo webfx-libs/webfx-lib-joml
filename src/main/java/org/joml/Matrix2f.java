@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2020-2023 JOML
+ * Copyright (c) 2020-2022 JOML
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,14 +23,8 @@
  */
 package org.joml;
 
-//#ifdef __HAS_NIO__
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-//#endif
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -43,9 +37,9 @@ import java.text.NumberFormat;
  *
  * @author Joseph Burton
  */
-public class Matrix2f implements Externalizable, Cloneable, Matrix2fc {
+public class Matrix2f implements /*Externalizable, Cloneable,*/ Matrix2fc {
 
-    private static final long serialVersionUID = 1L;
+    //private static final long serialVersionUID = 1L;
 
     public float m00, m01;
     public float m10, m11;
@@ -107,7 +101,6 @@ public class Matrix2f implements Externalizable, Cloneable, Matrix2fc {
         this.m11 = m11;
     }
 
-//#ifdef __HAS_NIO__
     /**
      * Create a new {@link Matrix2f} by reading its 4 float components from the given {@link FloatBuffer}
      * at the buffer's current position.
@@ -122,7 +115,6 @@ public class Matrix2f implements Externalizable, Cloneable, Matrix2fc {
     public Matrix2f(FloatBuffer buffer) {
         MemUtil.INSTANCE.get(this, buffer.position(), buffer);
     }
-//#endif
 
     /**
      * Create a new {@link Matrix2f} and initialize its two columns using the supplied vectors.
@@ -250,9 +242,7 @@ public class Matrix2f implements Externalizable, Cloneable, Matrix2fc {
      * @return this
      */
     public Matrix2f set(Matrix2fc m) {
-        if (m == this)
-            return this;
-        else if (m instanceof Matrix2f) {
+        if (m instanceof Matrix2f) {
             MemUtil.INSTANCE.copy((Matrix2f) m, this);
         } else {
             setMatrix2fc(m);
@@ -392,11 +382,11 @@ public class Matrix2f implements Externalizable, Cloneable, Matrix2fc {
     }
 
     /**
-     * Set the values in this matrix based on the supplied double array. The result looks like this:
+     * Set the values in this matrix based on the supplied float array. The result looks like this:
      * <p>
      * 0, 2<br>
      * 1, 3<br>
-     * <p>
+     *
      * This method only uses the first 4 values, all others are ignored.
      *
      * @param m
@@ -404,32 +394,7 @@ public class Matrix2f implements Externalizable, Cloneable, Matrix2fc {
      * @return this
      */
     public Matrix2f set(float m[]) {
-        m00 = m[0];
-        m01 = m[1];
-        m10 = m[3];
-        m11 = m[4];
-        return this;
-    }
-
-    /**
-     * Set the values in this matrix based on the supplied array in column-major order. The result looks like this:
-     * <p>
-     * 0, 2<br>
-     * 1, 3<br>
-     * <p>
-     * This method only uses the 4 values starting at the given offset.
-     *
-     * @param m
-     *          the array to read the matrix values from
-     * @param off
-     *          the offset into the array
-     * @return this
-     */
-    public Matrix2f set(float m[], int off) {
-        m00 = m[off+0];
-        m01 = m[off+1];
-        m10 = m[off+3];
-        m11 = m[off+4];
+        MemUtil.INSTANCE.copy(m, 0, this);
         return this;
     }
 
@@ -498,7 +463,7 @@ public class Matrix2f implements Externalizable, Cloneable, Matrix2fc {
      *
      * @return the string representation
      */
-    public String toString() {
+    /*public String toString() {
         String str = toString(Options.NUMBER_FORMAT);
         StringBuffer res = new StringBuffer();
         int eIndex = Integer.MIN_VALUE;
@@ -516,7 +481,7 @@ public class Matrix2f implements Externalizable, Cloneable, Matrix2fc {
             res.append(c);
         }
         return res.toString();
-    }
+    }*/
 
     /**
      * Return a string representation of this matrix by formatting the matrix elements with the given {@link NumberFormat}.
@@ -525,10 +490,10 @@ public class Matrix2f implements Externalizable, Cloneable, Matrix2fc {
      *          the {@link NumberFormat} used to format the matrix values with
      * @return the string representation
      */
-    public String toString(NumberFormat formatter) {
+    /*public String toString(NumberFormat formatter) {
         return Runtime.format(m00, formatter) + " " + Runtime.format(m10, formatter) + "\n"
              + Runtime.format(m01, formatter) + " " + Runtime.format(m11, formatter) + "\n";
-    }
+    }*/
 
     /**
      * Get the current values of <code>this</code> matrix and store them into
@@ -559,7 +524,7 @@ public class Matrix2f implements Externalizable, Cloneable, Matrix2fc {
         return Math.atan2(m01, m11);
     }
 
-//#ifdef __HAS_NIO__
+
     public FloatBuffer get(FloatBuffer buffer) {
         return get(buffer.position(), buffer);
     }
@@ -595,21 +560,12 @@ public class Matrix2f implements Externalizable, Cloneable, Matrix2fc {
         MemUtil.INSTANCE.putTransposed(this, index, buffer);
         return buffer;
     }
-//#endif
-//#ifdef __HAS_UNSAFE__
     public Matrix2fc getToAddress(long address) {
         if (Options.NO_UNSAFE)
             throw new UnsupportedOperationException("Not supported when using joml.nounsafe");
-        MemUtil.MemUtilUnsafe.put(this, address);
+        //MemUtil.MemUtilUnsafe.put(this, address);
         return this;
     }
-    public Matrix2fc getTransposedToAddress(long address) {
-        if (Options.NO_UNSAFE)
-            throw new UnsupportedOperationException("Not supported when using joml.nounsafe");
-        MemUtil.MemUtilUnsafe.putTransposed(this, address);
-        return this;
-    }
-//#endif
 
     public float[] get(float[] arr, int offset) {
         MemUtil.INSTANCE.copy(this, arr, offset);
@@ -620,7 +576,6 @@ public class Matrix2f implements Externalizable, Cloneable, Matrix2fc {
         return get(arr, 0);
     }
 
-//#ifdef __HAS_NIO__
     /**
      * Set the values of this matrix by reading 4 float values from the given {@link FloatBuffer} in column-major order,
      * starting at its current position.
@@ -692,9 +647,7 @@ public class Matrix2f implements Externalizable, Cloneable, Matrix2fc {
         MemUtil.INSTANCE.get(this, index, buffer);
         return this;
     }
-//#endif
 
-//#ifdef __HAS_UNSAFE__
     /**
      * Set the values of this matrix by reading 4 float values from off-heap memory in column-major order,
      * starting at the given address.
@@ -710,28 +663,9 @@ public class Matrix2f implements Externalizable, Cloneable, Matrix2fc {
     public Matrix2f setFromAddress(long address) {
         if (Options.NO_UNSAFE)
             throw new UnsupportedOperationException("Not supported when using joml.nounsafe");
-        MemUtil.MemUtilUnsafe.get(this, address);
+        //MemUtil.MemUtilUnsafe.get(this, address);
         return this;
     }
-    /**
-     * Set the values of this matrix by reading 4 float values from off-heap memory in row-major order,
-     * starting at the given address.
-     * <p>
-     * This method will throw an {@link UnsupportedOperationException} when JOML is used with `-Djoml.nounsafe`.
-     * <p>
-     * <em>This method is unsafe as it can result in a crash of the JVM process when the specified address range does not belong to this process.</em>
-     *
-     * @param address
-     *              the off-heap memory address to read the matrix values from in row-major order
-     * @return this
-     */
-    public Matrix2f setTransposedFromAddress(long address) {
-        if (Options.NO_UNSAFE)
-            throw new UnsupportedOperationException("Not supported when using joml.nounsafe");
-        MemUtil.MemUtilUnsafe.getTransposed(this, address);
-        return this;
-    }
-//#endif
 
     /**
      * Set all values within this matrix to zero.
@@ -967,7 +901,7 @@ public class Matrix2f implements Externalizable, Cloneable, Matrix2fc {
         return dest;
     }
 
-    public void writeExternal(ObjectOutput out) throws IOException {
+    /*public void writeExternal(ObjectOutput out) throws IOException {
         out.writeFloat(m00);
         out.writeFloat(m01);
         out.writeFloat(m10);
@@ -980,7 +914,7 @@ public class Matrix2f implements Externalizable, Cloneable, Matrix2fc {
         m10 = in.readFloat();
         m11 = in.readFloat();
     }
-
+*/
     /**
      * Apply rotation about the origin to this matrix by rotating the given amount of radians.
      * <p>
@@ -1353,7 +1287,7 @@ public class Matrix2f implements Externalizable, Cloneable, Matrix2fc {
             return true;
         if (obj == null)
             return false;
-        if (!(obj instanceof Matrix2f))
+        if (getClass() != obj.getClass())
             return false;
         Matrix2f other = (Matrix2f) obj;
         if (Float.floatToIntBits(m00) != Float.floatToIntBits(other.m00))
@@ -1371,6 +1305,8 @@ public class Matrix2f implements Externalizable, Cloneable, Matrix2fc {
         if (this == m)
             return true;
         if (m == null)
+            return false;
+        if (!(m instanceof Matrix2f))
             return false;
         if (!Runtime.equals(m00, m.m00(), delta))
             return false;
@@ -1482,8 +1418,8 @@ public class Matrix2f implements Externalizable, Cloneable, Matrix2fc {
                Math.isFinite(m10) && Math.isFinite(m11);
     }
 
-    public Object clone() throws CloneNotSupportedException {
+    /*public Object clone() throws CloneNotSupportedException {
         return super.clone();
-    }
+    }*/
 
 }

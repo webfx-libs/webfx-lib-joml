@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2015-2023 Richard Greenlees
+ * Copyright (c) 2015-2022 Richard Greenlees
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,14 +23,8 @@
  */
 package org.joml;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-//#ifdef __HAS_NIO__
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-//#endif
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -41,9 +35,9 @@ import java.text.NumberFormat;
  * @author Kai Burjack
  * @author Hans Uhlig
  */
-public class Vector2i implements Externalizable, Cloneable, Vector2ic {
+public class Vector2i implements /*Externalizable, Cloneable,*/ Vector2ic {
 
-    private static final long serialVersionUID = 1L;
+    //private static final long serialVersionUID = 1L;
 
     /**
      * The x component of the vector.
@@ -167,7 +161,6 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
         this.y = xy[1];
     }
 
-//#ifdef __HAS_NIO__
     /**
      * Create a new {@link Vector2i} and read this vector from the supplied
      * {@link ByteBuffer} at the current buffer
@@ -239,7 +232,6 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
     public Vector2i(int index, IntBuffer buffer) {
         MemUtil.INSTANCE.get(this, index, buffer);
     }
-//#endif
 
     public int x() {
         return this.x;
@@ -278,7 +270,7 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
     }
 
     /**
-     * Set this vector to the values of v.
+     * Set this {@link Vector2i} to the values of v.
      *
      * @param v
      *          the vector to copy from
@@ -291,7 +283,7 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
     }
 
     /**
-     * Set this vector to the values of v using {@link RoundingMode#TRUNCATE} rounding.
+     * Set this {@link Vector2i} to the values of v using {@link RoundingMode#TRUNCATE} rounding.
      * <p>
      * Note that due to the given vector <code>v</code> storing the components
      * in double-precision, there is the possibility to lose precision.
@@ -307,7 +299,7 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
     }
 
     /**
-     * Set this vector to the values of v using the given {@link RoundingMode}.
+     * Set this {@link Vector2i} to the values of v using the given {@link RoundingMode}.
      * <p>
      * Note that due to the given vector <code>v</code> storing the components
      * in double-precision, there is the possibility to lose precision.
@@ -325,7 +317,7 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
     }
 
     /**
-     * Set this vector to the values of v using the given {@link RoundingMode}.
+     * Set this {@link Vector2i} to the values of v using the given {@link RoundingMode}.
      * <p>
      * Note that due to the given vector <code>v</code> storing the components
      * in double-precision, there is the possibility to lose precision.
@@ -355,7 +347,6 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
         return this;
     }
 
-//#ifdef __HAS_NIO__
     /**
      * Read this vector from the supplied {@link ByteBuffer} at the current
      * buffer {@link ByteBuffer#position() position}.
@@ -431,9 +422,7 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
         MemUtil.INSTANCE.get(this, index, buffer);
         return this;
     }
-//#endif
 
-//#ifdef __HAS_UNSAFE__
     /**
      * Set the values of this vector by reading 2 integer values from off-heap memory,
      * starting at the given address.
@@ -449,10 +438,9 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
     public Vector2i setFromAddress(long address) {
         if (Options.NO_UNSAFE)
             throw new UnsupportedOperationException("Not supported when using joml.nounsafe");
-        MemUtil.MemUtilUnsafe.get(this, address);
+        //MemUtil.MemUtilUnsafe.get(this, address);
         return this;
     }
-//#endif
 
     public int get(int component) throws IllegalArgumentException {
         switch (component) {
@@ -489,7 +477,6 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
         return this;
     }
 
-//#ifdef __HAS_NIO__
     public ByteBuffer get(ByteBuffer buffer) {
         MemUtil.INSTANCE.put(this, buffer.position(), buffer);
         return buffer;
@@ -509,16 +496,13 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
         MemUtil.INSTANCE.put(this, index, buffer);
         return buffer;
     }
-//#endif
 
-//#ifdef __HAS_UNSAFE__
     public Vector2ic getToAddress(long address) {
         if (Options.NO_UNSAFE)
             throw new UnsupportedOperationException("Not supported when using joml.nounsafe");
-        MemUtil.MemUtilUnsafe.put(this, address);
+        //MemUtil.MemUtilUnsafe.put(this, address);
         return this;
     }
-//#endif
 
     /**
      * Subtract the supplied vector from this one and store the result in
@@ -529,7 +513,9 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
      * @return this
      */
     public Vector2i sub(Vector2ic v) {
-        return sub(v, this);
+        this.x = x - v.x();
+        this.y = y - v.y();
+        return this;
     }
 
     public Vector2i sub(Vector2ic v, Vector2i dest) {
@@ -548,7 +534,9 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
      * @return this
      */
     public Vector2i sub(int x, int y) {
-        return sub(x, y, this);
+        this.x = this.x - x;
+        this.y = this.y - y;
+        return this;
     }
 
     public Vector2i sub(int x, int y, Vector2i dest) {
@@ -558,7 +546,7 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
     }
 
     public long lengthSquared() {
-        return (long) x * x + (long) y * y;
+        return x * x + y * y;
     }
 
     /**
@@ -570,11 +558,11 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
      * @return the length squared of the given vector
      */
     public static long lengthSquared(int x, int y) {
-        return (long) x * x + (long) y * y;
+        return x * x + y * y;
     }
 
     public double length() {
-        return Math.sqrt((long) x * x + (long) y * y);
+        return Math.sqrt(x * x + y * y);
     }
 
     /**
@@ -586,31 +574,31 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
      * @return the length squared of the given vector
      */
     public static double length(int x, int y) {
-        return Math.sqrt((long) x * x + (long) y * y);
+        return Math.sqrt(x * x + y * y);
     }
 
     public double distance(Vector2ic v) {
         int dx = this.x - v.x();
         int dy = this.y - v.y();
-        return Math.sqrt((long) dx * dx + (long) dy * dy);
+        return Math.sqrt(dx * dx + dy * dy);
     }
 
     public double distance(int x, int y) {
         int dx = this.x - x;
         int dy = this.y - y;
-        return Math.sqrt((long) dx * dx + (long) dy * dy);
+        return Math.sqrt(dx * dx + dy * dy);
     }
 
     public long distanceSquared(Vector2ic v) {
         int dx = this.x - v.x();
         int dy = this.y - v.y();
-        return (long) dx * dx + (long) dy * dy;
+        return dx * dx + dy * dy;
     }
 
     public long distanceSquared(int x, int y) {
         int dx = this.x - x;
         int dy = this.y - y;
-        return (long) dx * dx + (long) dy * dy;
+        return dx * dx + dy * dy;
     }
 
     public long gridDistance(Vector2ic v) {
@@ -637,7 +625,7 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
     public static double distance(int x1, int y1, int x2, int y2) {
         int dx = x1 - x2;
         int dy = y1 - y2;
-        return Math.sqrt((long) dx * dx + (long) dy * dy);
+        return Math.sqrt(dx * dx + dy * dy);
     }
 
     /**
@@ -656,7 +644,7 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
     public static long distanceSquared(int x1, int y1, int x2, int y2) {
         int dx = x1 - x2;
         int dy = y1 - y2;
-        return (long) dx * dx + (long) dy * dy;
+        return dx * dx + dy * dy;
     }
     
     /**
@@ -688,7 +676,9 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
      * @return this
      */
     public Vector2i add(int x, int y) {
-        return add(x, y, this);
+        this.x = this.x + x;
+        this.y = this.y + y;
+        return this;
     }
 
     public Vector2i add(int x, int y, Vector2i dest) {
@@ -698,7 +688,7 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
     }
 
     /**
-     * Multiply all components of this vector by the given scalar
+     * Multiply all components of this {@link Vector2i} by the given scalar
      * value.
      * 
      * @param scalar
@@ -706,7 +696,9 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
      * @return this
      */
     public Vector2i mul(int scalar) {
-        return mul(scalar, this);
+        this.x = x * scalar;
+        this.y = y * scalar;
+        return this;
     }
 
     public Vector2i mul(int scalar, Vector2i dest) {
@@ -723,7 +715,9 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
      * @return this
      */
     public Vector2i mul(Vector2ic v) {
-        return mul(v, this);
+        this.x = x * v.x();
+        this.y = y * v.y();
+        return this;
     }
 
     public Vector2i mul(Vector2ic v, Vector2i dest) {
@@ -742,7 +736,9 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
      * @return this
      */
     public Vector2i mul(int x, int y) {
-        return mul(x, y, this);
+        this.x = this.x * x;
+        this.y = this.y * y;
+        return this;
     }
 
     public Vector2i mul(int x, int y, Vector2i dest) {
@@ -752,14 +748,17 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
     }
 
     /**
-     * Divide all components of this vector by the given scalar value.
+     * Divide all components of this {@link Vector2i} by the given scalar value.
      *
      * @param scalar
      *          the scalar to divide by
      * @return a vector holding the result
      */
     public Vector2i div(float scalar) {
-        return div(scalar, this);
+        float invscalar = 1.0f / scalar;
+        this.x = (int) (x * invscalar);
+        this.y = (int) (y * invscalar);
+        return this;
     }
 
     public Vector2i div(float scalar, Vector2i dest) {
@@ -770,14 +769,16 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
     }
 
     /**
-     * Divide all components of this vector by the given scalar value.
+     * Divide all components of this {@link Vector2i} by the given scalar value.
      *
      * @param scalar
      *          the scalar to divide by
      * @return a vector holding the result
      */
     public Vector2i div(int scalar) {
-        return div(scalar, this);
+        this.x = x / scalar;
+        this.y = y / scalar;
+        return this;
     }
 
     public Vector2i div(int scalar, Vector2i dest) {
@@ -797,7 +798,7 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
         return this;
     }
 
-    public void writeExternal(ObjectOutput out) throws IOException {
+    /*public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(x);
         out.writeInt(y);
     }
@@ -805,7 +806,7 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         x = in.readInt();
         y = in.readInt();
-    }
+    }*/
 
     /**
      * Negate this vector.
@@ -813,7 +814,9 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
      * @return this
      */
     public Vector2i negate() {
-        return negate(this);
+        this.x = -x;
+        this.y = -y;
+        return this;
     }
 
     public Vector2i negate(Vector2i dest) {
@@ -830,7 +833,9 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
      * @return this
      */
     public Vector2i min(Vector2ic v) {
-        return min(v, this);
+        this.x = x < v.x() ? x : v.x();
+        this.y = y < v.y() ? y : v.y();
+        return this;
     }
 
     public Vector2i min(Vector2ic v, Vector2i dest) {
@@ -847,7 +852,9 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
      * @return this
      */
     public Vector2i max(Vector2ic v) {
-        return max(v, this);
+        this.x = x > v.x() ? x : v.x();
+        this.y = y > v.y() ? y : v.y();
+        return this;
     }
 
     public Vector2i max(Vector2ic v, Vector2i dest) {
@@ -878,7 +885,9 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
      * @return this
      */
     public Vector2i absolute() {
-        return absolute(this);
+        this.x = Math.abs(this.x);
+        this.y = Math.abs(this.y);
+        return this;
     }
 
     public Vector2i absolute(Vector2i dest) {
@@ -930,9 +939,9 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
      * 
      * @return the string representation
      */
-    public String toString() {
+    /*public String toString() {
         return Runtime.formatNumbers(toString(Options.NUMBER_FORMAT));
-    }
+    }*/
 
     /**
      * Return a string representation of this vector by formatting the vector components with the given {@link NumberFormat}.
@@ -941,12 +950,12 @@ public class Vector2i implements Externalizable, Cloneable, Vector2ic {
      *          the {@link NumberFormat} used to format the vector components with
      * @return the string representation
      */
-    public String toString(NumberFormat formatter) {
+    /*public String toString(NumberFormat formatter) {
         return "(" + formatter.format(x) + " " + formatter.format(y) + ")";
-    }
+    }*/
 
-    public Object clone() throws CloneNotSupportedException {
+    /*public Object clone() throws CloneNotSupportedException {
         return super.clone();
-    }
+    }*/
 
 }

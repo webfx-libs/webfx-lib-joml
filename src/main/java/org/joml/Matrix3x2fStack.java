@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2018-2023 JOML
+ * Copyright (c) 2018-2022 JOML
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,10 +22,6 @@
  * THE SOFTWARE.
  */
 package org.joml;
-
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 
 /**
  * A stack of many {@link Matrix3x2f} instances. This resembles the matrix stack known from legacy OpenGL.
@@ -155,7 +151,7 @@ public class Matrix3x2fStack extends Matrix3x2f {
         return true;
     }
 
-    public void writeExternal(ObjectOutput out) throws IOException {
+    /*public void writeExternal(ObjectOutput out) throws IOException {
         super.writeExternal(out);
         out.writeInt(curr);
         for (int i = 0; i < curr; i++) {
@@ -172,15 +168,15 @@ public class Matrix3x2fStack extends Matrix3x2f {
             m.readExternal(in);
             mats[i] = m;
         }
-    }
+    }*/
 
-    public Object clone() throws CloneNotSupportedException {
+    /*public Object clone() throws CloneNotSupportedException {
         Matrix3x2fStack cloned = (Matrix3x2fStack) super.clone();
         Matrix3x2f[] clonedMats = new Matrix3x2f[mats.length];
         for (int i = 0; i < mats.length; i++)
             clonedMats[i] = (Matrix3x2f) mats[i].clone();
         cloned.mats = clonedMats;
         return cloned;
-    }
+    }*/
 
 }

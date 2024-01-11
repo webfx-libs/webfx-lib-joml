@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2015-2023 JOML
+ * Copyright (c) 2015-2022 JOML
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,11 @@
  */
 package org.joml;
 
-//#ifdef __HAS_NIO__
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-//#endif
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Interface to a read-only view of a quaternion of single-precision floats.
@@ -92,34 +92,6 @@ public interface Quaternionfc {
      * @return dest
      */
     Quaternionf add(Quaternionfc q2, Quaternionf dest);
-
-    /**
-     * Subtract the quaternion <code>(x, y, z, w)</code> from this quaternion and store the result in <code>dest</code>.
-     *
-     * @param x
-     *          the x component of the vector part
-     * @param y
-     *          the y component of the vector part
-     * @param z
-     *          the z component of the vector part
-     * @param w
-     *          the real/scalar component
-     * @param dest
-     *          will hold the result
-     * @return dest
-     */
-    Quaternionf sub(float x, float y, float z, float w, Quaternionf dest);
-
-    /**
-     * Subtract <code>q2</code> from this quaternion and store the result in <code>dest</code>.
-     *
-     * @param q2
-     *          the quaternion to add to this
-     * @param dest
-     *          will hold the result
-     * @return dest
-     */
-    Quaternionf sub(Quaternionfc q2, Quaternionf dest);
 
     /**
      * Return the angle in radians represented by this normalized quaternion rotation.
@@ -236,7 +208,6 @@ public interface Quaternionfc {
      */
     Quaternionf get(Quaternionf dest);
 
-//#ifdef __HAS_NIO__
     /**
      * Store the 3x3 float matrix representation of <code>this</code> quaternion in column-major order into the given {@link ByteBuffer}.
      * <p>
@@ -302,7 +273,6 @@ public interface Quaternionfc {
      * @return dest
      */
     FloatBuffer getAsMatrix4x3f(FloatBuffer dest);
-//#endif
 
     /**
      * Multiply this quaternion by <code>q</code> and store the result in <code>dest</code>.
@@ -351,7 +321,7 @@ public interface Quaternionfc {
     /**
      * Multiply this quaternion by the given scalar and store the result in <code>dest</code>.
      * <p>
-     * This method multiplies all the four components by the specified scalar.
+     * This method multiplies all of the four components by the specified scalar.
      * 
      * @param f
      *          the factor to multiply all components by
@@ -1518,19 +1488,6 @@ public interface Quaternionfc {
     Quaternionf div(Quaternionfc b, Quaternionf dest);
 
     /**
-     * Divide this quaternion by the given scalar and store the result in <code>dest</code>.
-     * <p>
-     * This method divides all the four components by the specified scalar.
-     *
-     * @param f
-     *          the factor to divide all components by
-     * @param dest
-     *            will hold the result
-     * @return dest
-     */
-    Quaternionf div(float f, Quaternionf dest);
-
-    /**
      * Conjugate this quaternion and store the result in <code>dest</code>.
      * 
      * @param dest
@@ -1613,7 +1570,7 @@ public interface Quaternionfc {
      * provided parameter <code>eulerAngles</code>.
      * <p>
      * The Euler angles are always returned as the angle around X in the {@link Vector3f#x} field, the angle around Y in the {@link Vector3f#y}
-     * field and the angle around Z in the {@link Vector3f#z} field of the supplied vector.
+     * field and the angle around Z in the {@link Vector3f#z} field of the supplied {@link Vector3f} instance.
      * 
      * @param eulerAngles
      *          will hold the euler angles in radians
@@ -1626,7 +1583,7 @@ public interface Quaternionfc {
      * provided parameter <code>eulerAngles</code>.
      * <p>
      * The Euler angles are always returned as the angle around X in the {@link Vector3f#x} field, the angle around Y in the {@link Vector3f#y}
-     * field and the angle around Z in the {@link Vector3f#z} field of the supplied vector.
+     * field and the angle around Z in the {@link Vector3f#z} field of the supplied {@link Vector3f} instance.
      * 
      * @param eulerAngles
      *          will hold the euler angles in radians
@@ -1639,7 +1596,7 @@ public interface Quaternionfc {
      * provided parameter <code>eulerAngles</code>.
      * <p>
      * The Euler angles are always returned as the angle around X in the {@link Vector3f#x} field, the angle around Y in the {@link Vector3f#y}
-     * field and the angle around Z in the {@link Vector3f#z} field of the supplied vector.
+     * field and the angle around Z in the {@link Vector3f#z} field of the supplied {@link Vector3f} instance.
      * 
      * @param eulerAngles
      *          will hold the euler angles in radians
@@ -1652,7 +1609,7 @@ public interface Quaternionfc {
      * provided parameter <code>eulerAngles</code>.
      * <p>
      * The Euler angles are always returned as the angle around X in the {@link Vector3f#x} field, the angle around Y in the {@link Vector3f#y}
-     * field and the angle around Z in the {@link Vector3f#z} field of the supplied vector.
+     * field and the angle around Z in the {@link Vector3f#z} field of the supplied {@link Vector3f} instance.
      * 
      * @param eulerAngles
      *          will hold the euler angles in radians

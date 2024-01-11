@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2016-2023 JOML
+ * Copyright (c) 2016-2022 JOML
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,11 @@
  */
 package org.joml;
 
-//#ifdef __HAS_NIO__
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
-//#endif
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Interface to a read-only view of a 2-dimensional vector of double-precision floats.
@@ -46,7 +46,6 @@ public interface Vector2dc {
      */
     double y();
 
-//#ifdef __HAS_NIO__
     /**
      * Store this vector into the supplied {@link ByteBuffer} at the current
      * buffer {@link ByteBuffer#position() position}.
@@ -108,9 +107,7 @@ public interface Vector2dc {
      * @return the passed in buffer
      */
     DoubleBuffer get(int index, DoubleBuffer buffer);
-//#endif
 
-//#ifdef __HAS_UNSAFE__
     /**
      * Store this vector at the given off-heap memory address.
      * <p>
@@ -123,7 +120,6 @@ public interface Vector2dc {
      * @return this
      */
     Vector2dc getToAddress(long address);
-//#endif
 
     /**
      * Subtract <code>(x, y)</code> from this vector and store the result in <code>dest</code>.
@@ -172,7 +168,7 @@ public interface Vector2dc {
     Vector2d mul(double scalar, Vector2d dest);
 
     /**
-     * Multiply the components of this vector by the given scalar values and store the result in <code>dest</code>.
+     * Multiply the components of this Vector2d by the given scalar values and store the result in <code>dest</code>.
      * 
      * @param x
      *          the x component to multiply this vector by
@@ -185,7 +181,7 @@ public interface Vector2dc {
     Vector2d mul(double x, double y, Vector2d dest);
 
     /**
-     * Multiply this vector component-wise by another vector and store the result in <code>dest</code>.
+     * Multiply this Vector2d component-wise by another Vector2d and store the result in <code>dest</code>.
      * 
      * @param v
      *          the vector to multiply by
@@ -196,7 +192,7 @@ public interface Vector2dc {
     Vector2d mul(Vector2dc v, Vector2d dest);
 
     /**
-     * Divide this vector by the given scalar value and store the result in <code>dest</code>.
+     * Divide this Vector2d by the given scalar value and store the result in <code>dest</code>.
      * 
      * @param scalar
      *          the scalar to divide this vector by
@@ -207,7 +203,7 @@ public interface Vector2dc {
     Vector2d div(double scalar, Vector2d dest);
 
     /**
-     * Divide the components of this vector by the given scalar values and store the result in <code>dest</code>.
+     * Divide the components of this Vector3f by the given scalar values and store the result in <code>dest</code>.
      * 
      * @param x
      *          the x component to divide this vector by
@@ -220,7 +216,7 @@ public interface Vector2dc {
     Vector2d div(double x, double y, Vector2d dest);
 
     /**
-     * Divide this vector component-wise by another vector and store the result in <code>dest</code>.
+     * Divide this Vector2d component-wise by another Vector2f and store the result in <code>dest</code>.
      * 
      * @param v
      *          the vector to divide by
@@ -244,9 +240,6 @@ public interface Vector2dc {
     /**
      * Multiply the given matrix <code>mat</code> with <code>this</code> and store the
      * result in <code>dest</code>.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
      *
      * @param mat
      *          the matrix to multiply this vector by
@@ -259,9 +252,6 @@ public interface Vector2dc {
     /**
      * Multiply the given matrix <code>mat</code> with <code>this</code> and store the
      * result in <code>dest</code>.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
      *
      * @param mat
      *          the matrix to multiply this vector by
@@ -272,10 +262,7 @@ public interface Vector2dc {
     Vector2d mul(Matrix2fc mat, Vector2d dest);
 
     /**
-     * Multiply the transpose of the given matrix with this vector and store the result in <code>dest</code>.
-     * <p>
-     * Note that this method performs the operation <code>M^T * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
+     * Multiply the transpose of the given matrix with this Vector2f and store the result in <code>dest</code>.
      *
      * @param mat
      *          the matrix
@@ -286,10 +273,7 @@ public interface Vector2dc {
     Vector2d mulTranspose(Matrix2dc mat, Vector2d dest);
 
     /**
-     * Multiply the transpose of the given matrix with this vector and store the result in <code>dest</code>.
-     * <p>
-     * Note that this method performs the operation <code>M^T * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
+     * Multiply the transpose of the given matrix with this Vector2f and store the result in <code>dest</code>.
      *
      * @param mat
      *          the matrix
@@ -304,10 +288,7 @@ public interface Vector2dc {
      * result in <code>dest</code>.
      * <p>
      * This method assumes the <code>z</code> component of <code>this</code> to be <code>1.0</code>.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
+     * 
      * @param mat
      *          the matrix to multiply this vector by
      * @param dest
@@ -321,10 +302,7 @@ public interface Vector2dc {
      * result in <code>dest</code>.
      * <p>
      * This method assumes the <code>z</code> component of <code>this</code> to be <code>0.0</code>.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
+     * 
      * @param mat
      *          the matrix to multiply this vector by
      * @param dest

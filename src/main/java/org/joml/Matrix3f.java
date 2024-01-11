@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2015-2023 Richard Greenlees
+ * Copyright (c) 2015-2022 Richard Greenlees
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,16 +23,11 @@
  */
 package org.joml;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-//#ifdef __HAS_NIO__
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-//#endif
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+
 
 /**
  * Contains the definition of a 3x3 matrix of floats, and associated functions to transform
@@ -45,7 +40,7 @@ import java.text.NumberFormat;
  * @author Richard Greenlees
  * @author Kai Burjack
  */
-public class Matrix3f implements Externalizable, Cloneable, Matrix3fc {
+public class Matrix3f implements /*Externalizable, Cloneable,*/ Matrix3fc {
 
     private static final long serialVersionUID = 1L;
 
@@ -130,7 +125,6 @@ public class Matrix3f implements Externalizable, Cloneable, Matrix3fc {
         this.m22 = m22;
     }
 
-//#ifdef __HAS_NIO__
     /**
      * Create a new {@link Matrix3f} by reading its 9 float components from the given {@link FloatBuffer}
      * at the buffer's current position.
@@ -145,7 +139,6 @@ public class Matrix3f implements Externalizable, Cloneable, Matrix3fc {
     public Matrix3f(FloatBuffer buffer) {
         MemUtil.INSTANCE.get(this, buffer.position(), buffer);
     }
-//#endif
 
     /**
      * Create a new {@link Matrix3f} and initialize its three columns using the supplied vectors.
@@ -397,8 +390,6 @@ public class Matrix3f implements Externalizable, Cloneable, Matrix3fc {
      * @return this
      */
     public Matrix3f set(Matrix3fc m) {
-        if (m == this)
-            return this;
         return 
         _m00(m.m00()).
         _m01(m.m01()).
@@ -737,7 +728,7 @@ public class Matrix3f implements Externalizable, Cloneable, Matrix3fc {
      * 0, 3, 6<br>
      * 1, 4, 7<br>
      * 2, 5, 8<br>
-     * <p>
+     * 
      * This method only uses the first 9 values, all others are ignored.
      * 
      * @param m
@@ -745,26 +736,7 @@ public class Matrix3f implements Externalizable, Cloneable, Matrix3fc {
      * @return this
      */
     public Matrix3f set(float m[]) {
-        return set(m, 0);
-    }
-
-    /**
-     * Set the values in this matrix based on the supplied float array in column-major order. The result looks like this:
-     * <p>
-     * 0, 3, 6<br>
-     * 1, 4, 7<br>
-     * 2, 5, 8<br>
-     * <p>
-     * This method only uses the 9 values starting at the given offset.
-     *
-     * @param m
-     *          the array to read the matrix values from
-     * @param off
-     *          the offset into the array
-     * @return this
-     */
-    public Matrix3f set(float m[], int off) {
-        MemUtil.INSTANCE.copy(m, off, this);
+        MemUtil.INSTANCE.copy(m, 0, this);
         return this;
     }
 
@@ -856,7 +828,7 @@ public class Matrix3f implements Externalizable, Cloneable, Matrix3fc {
      * 
      * @return the string representation
      */
-    public String toString() {
+    /*public String toString() {
         String str = toString(Options.NUMBER_FORMAT);
         StringBuffer res = new StringBuffer();
         int eIndex = Integer.MIN_VALUE;
@@ -874,7 +846,7 @@ public class Matrix3f implements Externalizable, Cloneable, Matrix3fc {
             res.append(c);
         }
         return res.toString();
-    }
+    }*/
 
     /**
      * Return a string representation of this matrix by formatting the matrix elements with the given {@link NumberFormat}.
@@ -883,11 +855,11 @@ public class Matrix3f implements Externalizable, Cloneable, Matrix3fc {
      *          the {@link NumberFormat} used to format the matrix values with
      * @return the string representation
      */
-    public String toString(NumberFormat formatter) {
+    /*public String toString(NumberFormat formatter) {
         return Runtime.format(m00, formatter) + " " + Runtime.format(m10, formatter) + " " + Runtime.format(m20, formatter) + "\n"
              + Runtime.format(m01, formatter) + " " + Runtime.format(m11, formatter) + " " + Runtime.format(m21, formatter) + "\n"
              + Runtime.format(m02, formatter) + " " + Runtime.format(m12, formatter) + " " + Runtime.format(m22, formatter) + "\n";
-    }
+    }*/
 
     /**
      * Get the current values of <code>this</code> matrix and store them into
@@ -930,7 +902,7 @@ public class Matrix3f implements Externalizable, Cloneable, Matrix3fc {
         return dest.setFromNormalized(this);
     }
 
-//#ifdef __HAS_NIO__
+
     public FloatBuffer get(FloatBuffer buffer) {
         return get(buffer.position(), buffer);
     }
@@ -984,22 +956,13 @@ public class Matrix3f implements Externalizable, Cloneable, Matrix3fc {
         MemUtil.INSTANCE.putTransposed(this, index, buffer);
         return buffer;
     }
-//#endif
 
-//#ifdef __HAS_UNSAFE__
     public Matrix3fc getToAddress(long address) {
         if (Options.NO_UNSAFE)
             throw new UnsupportedOperationException("Not supported when using joml.nounsafe");
-        MemUtil.MemUtilUnsafe.put(this, address);
+        //MemUtil.MemUtilUnsafe.put(this, address);
         return this;
     }
-    public Matrix3fc getTransposedToAddress(long address) {
-        if (Options.NO_UNSAFE)
-            throw new UnsupportedOperationException("Not supported when using joml.nounsafe");
-        MemUtil.MemUtilUnsafe.putTransposed(this, address);
-        return this;
-    }
-//#endif
 
     public float[] get(float[] arr, int offset) {
         MemUtil.INSTANCE.copy(this, arr, offset);
@@ -1010,7 +973,6 @@ public class Matrix3f implements Externalizable, Cloneable, Matrix3fc {
         return get(arr, 0);
     }
 
-//#ifdef __HAS_NIO__
     /**
      * Set the values of this matrix by reading 9 float values from the given {@link FloatBuffer} in column-major order,
      * starting at its current position.
@@ -1082,8 +1044,6 @@ public class Matrix3f implements Externalizable, Cloneable, Matrix3fc {
         MemUtil.INSTANCE.get(this, index, buffer);
         return this;
     }
-//#endif
-//#ifdef __HAS_UNSAFE__
     /**
      * Set the values of this matrix by reading 9 float values from off-heap memory in column-major order,
      * starting at the given address.
@@ -1099,28 +1059,9 @@ public class Matrix3f implements Externalizable, Cloneable, Matrix3fc {
     public Matrix3f setFromAddress(long address) {
         if (Options.NO_UNSAFE)
             throw new UnsupportedOperationException("Not supported when using joml.nounsafe");
-        MemUtil.MemUtilUnsafe.get(this, address);
+        //MemUtil.MemUtilUnsafe.get(this, address);
         return this;
     }
-    /**
-     * Set the values of this matrix by reading 9 float values from off-heap memory in row-major order,
-     * starting at the given address.
-     * <p>
-     * This method will throw an {@link UnsupportedOperationException} when JOML is used with `-Djoml.nounsafe`.
-     * <p>
-     * <em>This method is unsafe as it can result in a crash of the JVM process when the specified address range does not belong to this process.</em>
-     *
-     * @param address
-     *              the off-heap memory address to read the matrix values from in row-major order
-     * @return this
-     */
-    public Matrix3f setTransposedFromAddress(long address) {
-        if (Options.NO_UNSAFE)
-            throw new UnsupportedOperationException("Not supported when using joml.nounsafe");
-        MemUtil.MemUtilUnsafe.getTransposed(this, address);
-        return this;
-    }
-//#endif
 
     /**
      * Set all values within this matrix to zero.
@@ -1736,7 +1677,7 @@ public class Matrix3f implements Externalizable, Cloneable, Matrix3fc {
                         Math.fma(m20, x, Math.fma(m21, y, m22 * z)));
     }
 
-    public void writeExternal(ObjectOutput out) throws IOException {
+    /*public void writeExternal(ObjectOutput out) throws IOException {
         out.writeFloat(m00);
         out.writeFloat(m01);
         out.writeFloat(m02);
@@ -1758,7 +1699,7 @@ public class Matrix3f implements Externalizable, Cloneable, Matrix3fc {
         m20 = in.readFloat();
         m21 = in.readFloat();
         m22 = in.readFloat();
-    }
+    }*/
 
     public Matrix3f rotateX(float ang, Matrix3f dest) {
         float sin, cos;
@@ -3445,7 +3386,7 @@ public class Matrix3f implements Externalizable, Cloneable, Matrix3fc {
             return true;
         if (obj == null)
             return false;
-        if (!(obj instanceof Matrix3f))
+        if (getClass() != obj.getClass())
             return false;
         Matrix3f other = (Matrix3f) obj;
         if (Float.floatToIntBits(m00) != Float.floatToIntBits(other.m00))
@@ -3473,6 +3414,8 @@ public class Matrix3f implements Externalizable, Cloneable, Matrix3fc {
         if (this == m)
             return true;
         if (m == null)
+            return false;
+        if (!(m instanceof Matrix3f))
             return false;
         if (!Runtime.equals(m00, m.m00(), delta))
             return false;
@@ -3902,13 +3845,6 @@ public class Matrix3f implements Externalizable, Cloneable, Matrix3fc {
         dest.x = Math.atan2(-m21, m22);
         dest.y = Math.atan2(m20, Math.sqrt(1.0f - m20 * m20));
         dest.z = Math.atan2(-m10, m00);
-        return dest;
-    }
-
-    public Vector3f getEulerAnglesYXZ(Vector3f dest) {
-        dest.x = Math.atan2(-m21, Math.sqrt(1.0f - m21 * m21));
-        dest.y = Math.atan2(m20, m22);
-        dest.z = Math.atan2(m01, m11);
         return dest;
     }
 
@@ -4973,8 +4909,8 @@ public class Matrix3f implements Externalizable, Cloneable, Matrix3fc {
         return dest._m00(m00)._m01(m01)._m02(m02)._m10(m10)._m11(m11)._m12(m12)._m20(-m20)._m21(-m21)._m22(-m22);
     }
 
-    public Object clone() throws CloneNotSupportedException {
+    /*public Object clone() throws CloneNotSupportedException {
         return super.clone();
-    }
+    }*/
 
 }

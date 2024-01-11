@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2016-2023 JOML
+ * Copyright (c) 2016-2022 JOML
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,8 @@
  */
 package org.joml;
 
-//#ifdef __HAS_NIO__
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-//#endif
 
 /**
  * Interface to a read-only view of a 4-dimensional vector of integers.
@@ -55,7 +53,6 @@ public interface Vector4ic {
      */
     int w();
 
-//#ifdef __HAS_NIO__
     /**
      * Store this vector into the supplied {@link IntBuffer} at the current
      * buffer {@link IntBuffer#position() position}.
@@ -119,9 +116,7 @@ public interface Vector4ic {
      * @return the passed in buffer
      */
     ByteBuffer get(int index, ByteBuffer buffer);
-//#endif
 
-//#ifdef __HAS_UNSAFE__
     /**
      * Store this vector at the given off-heap memory address.
      * <p>
@@ -134,7 +129,6 @@ public interface Vector4ic {
      * @return this
      */
     Vector4ic getToAddress(long address);
-//#endif
 
     /**
      * Subtract the supplied vector from this one and store the result in
@@ -221,7 +215,7 @@ public interface Vector4ic {
     Vector4i div(Vector4ic v, Vector4i dest);
 
     /**
-     * Multiply all components of this vector by the given scalar
+     * Multiply all components of this {@link Vector4i} by the given scalar
      * value and store the result in <code>dest</code>.
      *
      * @param scalar
@@ -233,7 +227,7 @@ public interface Vector4ic {
     Vector4i mul(int scalar, Vector4i dest);
 
     /**
-     * Divide all components of this vector by the given scalar value
+     * Divide all components of this {@link Vector4i} by the given scalar value
      * and store the result in <code>dest</code>.
      *
      * @param scalar
@@ -245,7 +239,7 @@ public interface Vector4ic {
     Vector4i div(float scalar, Vector4i dest);
 
     /**
-     * Divide all components of this vector by the given scalar value
+     * Divide all components of this {@link Vector4i} by the given scalar value
      * and store the result in <code>dest</code>.
      *
      * @param scalar
@@ -327,7 +321,7 @@ public interface Vector4ic {
      *          the other vector
      * @return the squared of the distance
      */
-    long distanceSquared(Vector4ic v);
+    int distanceSquared(Vector4ic v);
 
     /**
      * Return the square of the distance between <code>this</code> vector and
@@ -343,7 +337,7 @@ public interface Vector4ic {
      *          the w component of the other vector
      * @return the square of the distance
      */
-    long distanceSquared(int x, int y, int z, int w);
+    int distanceSquared(int x, int y, int z, int w);
 
     /**
      * Compute the dot product (inner product) of this vector and <code>v</code>.
@@ -352,7 +346,7 @@ public interface Vector4ic {
      *          the other vector
      * @return the dot product
      */
-    long dot(Vector4ic v);
+    int dot(Vector4ic v);
 
     /**
      * Negate this vector and store the result in <code>dest</code>.

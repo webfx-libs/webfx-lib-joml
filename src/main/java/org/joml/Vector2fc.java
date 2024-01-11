@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2016-2023 JOML
+ * Copyright (c) 2016-2022 JOML
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,11 @@
  */
 package org.joml;
 
-//#ifdef __HAS_NIO__
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-//#endif
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Interface to a read-only view of a 2-dimensional vector of single-precision floats.
@@ -46,7 +46,6 @@ public interface Vector2fc {
      */
     float y();
 
-//#ifdef __HAS_NIO__
     /**
      * Store this vector into the supplied {@link ByteBuffer} at the current
      * buffer {@link ByteBuffer#position() position}.
@@ -108,9 +107,7 @@ public interface Vector2fc {
      * @return the passed in buffer
      */
     FloatBuffer get(int index, FloatBuffer buffer);
-//#endif
 
-//#ifdef __HAS_UNSAFE__
     /**
      * Store this vector at the given off-heap memory address.
      * <p>
@@ -123,7 +120,6 @@ public interface Vector2fc {
      * @return this
      */
     Vector2fc getToAddress(long address);
-//#endif
 
     /**
      * Subtract <code>v</code> from <code>this</code> vector and store the result in <code>dest</code>.
@@ -287,7 +283,7 @@ public interface Vector2fc {
     Vector2f mul(float scalar, Vector2f dest);
 
     /**
-     * Multiply the components of this vector by the given scalar values and store the result in <code>dest</code>.
+     * Multiply the components of this Vector2f by the given scalar values and store the result in <code>dest</code>.
      * 
      * @param x
      *          the x component to multiply this vector by
@@ -300,7 +296,7 @@ public interface Vector2fc {
     Vector2f mul(float x, float y, Vector2f dest);
 
     /**
-     * Multiply this vector component-wise by another vector and store the result in <code>dest</code>.
+     * Multiply this Vector2f component-wise by another Vector2f and store the result in <code>dest</code>.
      * 
      * @param v
      *          the vector to multiply by
@@ -311,7 +307,7 @@ public interface Vector2fc {
     Vector2f mul(Vector2fc v, Vector2f dest);
 
     /**
-     * Divide all components of this vector by the given scalar
+     * Divide all components of this {@link Vector2f} by the given scalar
      * value and store the result in <code>dest</code>.
      * 
      * @param scalar
@@ -323,7 +319,7 @@ public interface Vector2fc {
     Vector2f div(float scalar, Vector2f dest);
     
     /**
-     * Divide this vector component-wise by another Vector2fc
+     * Divide this Vector2f component-wise by another Vector2fc
      * and store the result in <code>dest</code>.
      * 
      * @param v
@@ -335,7 +331,7 @@ public interface Vector2fc {
     Vector2f div(Vector2fc v, Vector2f dest);
 
     /**
-     * Divide the components of this vector by the given scalar values and store the result in <code>dest</code>.
+     * Divide the components of this Vector2f by the given scalar values and store the result in <code>dest</code>.
      * 
      * @param x
      *          the x component to divide this vector by
@@ -348,10 +344,7 @@ public interface Vector2fc {
     Vector2f div(float x, float y, Vector2f dest);
 
     /**
-     * Multiply the given matrix with this vector and store the result in <code>dest</code>.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
+     * Multiply the given matrix with this Vector2f and store the result in <code>dest</code>.
      *
      * @param mat
      *          the matrix
@@ -362,10 +355,7 @@ public interface Vector2fc {
     Vector2f mul(Matrix2fc mat, Vector2f dest);
 
     /**
-     * Multiply the given matrix with this vector and store the result in <code>dest</code>.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
+     * Multiply the given matrix with this Vector2f and store the result in <code>dest</code>.
      *
      * @param mat
      *          the matrix
@@ -376,10 +366,7 @@ public interface Vector2fc {
     Vector2f mul(Matrix2dc mat, Vector2f dest);
 
     /**
-     * Multiply the transpose of the given matrix with this vector and store the result in <code>dest</code>.
-     * <p>
-     * Note that this method performs the operation <code>M^T * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
+     * Multiply the transpose of the given matrix with this Vector3f and store the result in <code>dest</code>.
      *
      * @param mat
      *          the matrix
@@ -394,10 +381,7 @@ public interface Vector2fc {
      * result in <code>dest</code>.
      * <p>
      * This method assumes the <code>z</code> component of <code>this</code> to be <code>1.0</code>.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
+     * 
      * @param mat
      *          the matrix to multiply this vector by
      * @param dest
@@ -411,10 +395,7 @@ public interface Vector2fc {
      * result in <code>dest</code>.
      * <p>
      * This method assumes the <code>z</code> component of <code>this</code> to be <code>0.0</code>.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
+     * 
      * @param mat
      *          the matrix to multiply this vector by
      * @param dest

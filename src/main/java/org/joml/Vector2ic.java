@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2016-2023 JOML
+ * Copyright (c) 2016-2022 JOML
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,8 @@
  */
 package org.joml;
 
-//#ifdef __HAS_NIO__
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-//#endif
 
 /**
  * Interface to a read-only view of a 2-dimensional vector of integers.
@@ -45,7 +43,6 @@ public interface Vector2ic {
      */
     int y();
 
-//#ifdef __HAS_NIO__
     /**
      * Store this vector into the supplied {@link ByteBuffer} at the current
      * buffer {@link ByteBuffer#position() position}.
@@ -109,9 +106,7 @@ public interface Vector2ic {
      * @return the passed in buffer
      */
     IntBuffer get(int index, IntBuffer buffer);
-//#endif
 
-//#ifdef __HAS_UNSAFE__
     /**
      * Store this vector at the given off-heap memory address.
      * <p>
@@ -124,7 +119,6 @@ public interface Vector2ic {
      * @return this
      */
     Vector2ic getToAddress(long address);
-//#endif
 
     /**
      * Subtract the supplied vector from this one and store the result in
@@ -294,7 +288,7 @@ public interface Vector2ic {
     Vector2i mul(int x, int y, Vector2i dest);
 
     /**
-     * Divide all components of this vector by the given scalar value
+     * Divide all components of this {@link Vector2i} by the given scalar value
      * and store the result in <code>dest</code>.
      *
      * @param scalar
@@ -306,7 +300,7 @@ public interface Vector2ic {
     Vector2i div(float scalar, Vector2i dest);
 
     /**
-     * Divide all components of this vector by the given scalar value
+     * Divide all components of this {@link Vector2i} by the given scalar value
      * and store the result in <code>dest</code>.
      *
      * @param scalar

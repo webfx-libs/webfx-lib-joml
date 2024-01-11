@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2015-2023 Richard Greenlees
+ * Copyright (c) 2015-2022 Richard Greenlees
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,14 +23,8 @@
  */
 package org.joml;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-//#ifdef __HAS_NIO__
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-//#endif
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -42,9 +36,9 @@ import java.text.NumberFormat;
  * @author Kai Burjack
  * @author Hans Uhlig
  */
-public class Vector4i implements Externalizable, Cloneable, Vector4ic {
+public class Vector4i implements /*Externalizable, Cloneable,*/ Vector4ic {
 
-    private static final long serialVersionUID = 1L;
+    //private static final long serialVersionUID = 1L;
 
     /**
      * The x component of the vector.
@@ -129,10 +123,10 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
      *          the {@link RoundingMode} to use
      */
     public Vector4i(Vector3fc v, float w, int mode) {
-        this.x = Math.roundUsing(v.x(), mode);
-        this.y = Math.roundUsing(v.y(), mode);
-        this.z = Math.roundUsing(v.z(), mode);
-        this.w = Math.roundUsing(w, mode);
+        x = Math.roundUsing(v.x(), mode);
+        y = Math.roundUsing(v.y(), mode);
+        z = Math.roundUsing(v.z(), mode);
+        w = Math.roundUsing(w, mode);
     }
 
     /**
@@ -214,7 +208,6 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
         this.w = xyzw[3];
     }
 
-//#ifdef __HAS_NIO__
     /**
      * Create a new {@link Vector4i} and read this vector from the supplied
      * {@link ByteBuffer} at the current buffer
@@ -286,7 +279,6 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
     public Vector4i(int index, IntBuffer buffer) {
         MemUtil.INSTANCE.get(this, index, buffer);
     }
-//#endif
 
     public int x() {
         return this.x;
@@ -305,103 +297,7 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
     }
 
     /**
-     * Copy the <code>(x, y, z)</code> components of <code>this</code> into the supplied <code>dest</code> vector
-     * and return it.
-     *
-     * @param dest
-     *      will hold the result
-     * @return dest
-     */
-    public Vector3f xyz(Vector3f dest) {
-        return dest.set(x, y, z);
-    }
-
-    /**
-     * Copy the <code>(x, y, z)</code> components of <code>this</code> into the supplied <code>dest</code> vector
-     * and return it.
-     *
-     * @param dest
-     *      will hold the result
-     * @return dest
-     */
-    public Vector3d xyz(Vector3d dest) {
-        return dest.set(x, y, z);
-    }
-
-    /**
-     * Copy the <code>(x, y, z)</code> components of <code>this</code> into the supplied <code>dest</code> vector
-     * and return it.
-     *
-     * @param dest
-     *      will hold the result
-     * @return dest
-     */
-    public Vector3i xyz(Vector3i dest) {
-        return dest.set(x, y, z);
-    }
-
-    /**
-     * Copy the <code>(x, y, z)</code> components of <code>this</code> into the supplied <code>dest</code> vector
-     * and return it.
-     *
-     * @param dest
-     *      will hold the result
-     * @return dest
-     */
-    public Vector3L xyz(Vector3L dest) {
-        return dest.set(x, y, z);
-    }
-
-    /**
-     * Copy the <code>(x, y)</code> components of <code>this</code> into the supplied <code>dest</code> vector
-     * and return it.
-     *
-     * @param dest
-     *      will hold the result
-     * @return dest
-     */
-    public Vector2f xy(Vector2f dest) {
-        return dest.set(x, y);
-    }
-
-    /**
-     * Copy the <code>(x, y)</code> components of <code>this</code> into the supplied <code>dest</code> vector
-     * and return it.
-     *
-     * @param dest
-     *      will hold the result
-     * @return dest
-     */
-    public Vector2d xy(Vector2d dest) {
-        return dest.set(x, y);
-    }
-
-    /**
-     * Copy the <code>(x, y)</code> components of <code>this</code> into the supplied <code>dest</code> vector
-     * and return it.
-     *
-     * @param dest
-     *      will hold the result
-     * @return dest
-     */
-    public Vector2i xy(Vector2i dest) {
-        return dest.set(x, y);
-    }
-
-    /**
-     * Copy the <code>(x, y)</code> components of <code>this</code> into the supplied <code>dest</code> vector
-     * and return it.
-     *
-     * @param dest
-     *      will hold the result
-     * @return dest
-     */
-    public Vector2L xy(Vector2L dest) {
-        return dest.set(x, y);
-    }
-
-    /**
-     * Set this vector to the values of the given <code>v</code>.
+     * Set this {@link Vector4i} to the values of the given <code>v</code>.
      *
      * @param v
      *          the vector whose values will be copied into this
@@ -416,7 +312,7 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
     }
 
     /**
-     * Set this vector to the values of v using {@link RoundingMode#TRUNCATE} rounding.
+     * Set this {@link Vector4i} to the values of v using {@link RoundingMode#TRUNCATE} rounding.
      * <p>
      * Note that due to the given vector <code>v</code> storing the components
      * in double-precision, there is the possibility to lose precision.
@@ -434,7 +330,7 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
     }
 
     /**
-     * Set this vector to the values of v using the given {@link RoundingMode}.
+     * Set this {@link Vector4i} to the values of v using the given {@link RoundingMode}.
      * <p>
      * Note that due to the given vector <code>v</code> storing the components
      * in double-precision, there is the possibility to lose precision.
@@ -454,7 +350,7 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
     }
 
     /**
-     * Set this vector to the values of v using the given {@link RoundingMode}.
+     * Set this {@link Vector4i} to the values of v using the given {@link RoundingMode}.
      * <p>
      * Note that due to the given vector <code>v</code> storing the components
      * in double-precision, there is the possibility to lose precision.
@@ -563,7 +459,6 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
         return this;
     }
 
-//#ifdef __HAS_NIO__
     /**
      * Read this vector from the supplied {@link ByteBuffer} at the current
      * buffer {@link ByteBuffer#position() position}.
@@ -639,9 +534,7 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
         MemUtil.INSTANCE.get(this, index, buffer);
         return this;
     }
-//#endif
 
-//#ifdef __HAS_UNSAFE__
     /**
      * Set the values of this vector by reading 4 integer values from off-heap memory,
      * starting at the given address.
@@ -657,10 +550,9 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
     public Vector4i setFromAddress(long address) {
         if (Options.NO_UNSAFE)
             throw new UnsupportedOperationException("Not supported when using joml.nounsafe");
-        MemUtil.MemUtilUnsafe.get(this, address);
+        //MemUtil.MemUtilUnsafe.get(this, address);
         return this;
     }
-//#endif
 
     public int get(int component) throws IllegalArgumentException {
         switch (component) {
@@ -737,7 +629,6 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
         return this;
     }
 
-//#ifdef __HAS_NIO__
     public IntBuffer get(IntBuffer buffer) {
         MemUtil.INSTANCE.put(this, buffer.position(), buffer);
         return buffer;
@@ -757,16 +648,13 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
         MemUtil.INSTANCE.put(this, index, buffer);
         return buffer;
     }
-//#endif
 
-//#ifdef __HAS_UNSAFE__
     public Vector4ic getToAddress(long address) {
         if (Options.NO_UNSAFE)
             throw new UnsupportedOperationException("Not supported when using joml.nounsafe");
-        MemUtil.MemUtilUnsafe.put(this, address);
+        //MemUtil.MemUtilUnsafe.put(this, address);
         return this;
     }
-//#endif
 
     /**
      * Subtract the supplied vector from this one.
@@ -776,7 +664,11 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
      * @return this
      */
     public Vector4i sub(Vector4ic v) {
-        return sub(v, this);
+        this.x = this.x - v.x();
+        this.y = this.y - v.y();
+        this.z = this.z - v.z();
+        this.w = this.w - v.w();
+        return this;
     }
 
     /**
@@ -793,7 +685,11 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
      * @return this
      */
     public Vector4i sub(int x, int y, int z, int w) {
-        return sub(x, y, z, w, this);
+        this.x = this.x - x;
+        this.y = this.y - y;
+        this.z = this.z - z;
+        this.w = this.w - w;
+        return this;
     }
 
     public Vector4i sub(Vector4ic v, Vector4i dest) {
@@ -820,7 +716,11 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
      * @return this
      */
     public Vector4i add(Vector4ic v) {
-        return add(v, this);
+        this.x = this.x + v.x();
+        this.y = this.y + v.y();
+        this.z = this.z + v.z();
+        this.w = this.w + v.w();
+        return this;
     }
 
     public Vector4i add(Vector4ic v, Vector4i dest) {
@@ -845,7 +745,11 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
      * @return this
      */
     public Vector4i add(int x, int y, int z, int w) {
-        return add(x, y, z, w, this);
+        this.x = this.x + x;
+        this.y = this.y + y;
+        this.z = this.z + z;
+        this.w = this.w + w;
+        return this;
     }
 
     public Vector4i add(int x, int y, int z, int w, Vector4i dest) {
@@ -864,7 +768,11 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
      * @return this
      */
     public Vector4i mul(Vector4ic v) {
-        return mul(v, this);
+        this.x = x * v.x();
+        this.y = y * v.y();
+        this.z = z * v.z();
+        this.w = w * v.w();
+        return this;
     }
 
     public Vector4i mul(Vector4ic v, Vector4i dest) {
@@ -883,7 +791,11 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
      * @return this
      */
     public Vector4i div(Vector4ic v) {
-        return div(v, this);
+        this.x = x / v.x();
+        this.y = y / v.y();
+        this.z = z / v.z();
+        this.w = w / v.w();
+        return this;
     }
 
     public Vector4i div(Vector4ic v, Vector4i dest) {
@@ -895,7 +807,7 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
     }
 
     /**
-     * Multiply all components of this vector by the given scalar
+     * Multiply all components of this {@link Vector4i} by the given scalar
      * value.
      *
      * @param scalar
@@ -903,7 +815,11 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
      * @return this
      */
     public Vector4i mul(int scalar) {
-        return mul(scalar, this);
+        this.x = x * scalar;
+        this.y = y * scalar;
+        this.z = z * scalar;
+        this.w = w * scalar;
+        return this;
     }
 
     public Vector4i mul(int scalar, Vector4i dest) {
@@ -915,14 +831,19 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
     }
 
     /**
-     * Divide all components of this vector by the given scalar value.
+     * Divide all components of this {@link Vector3i} by the given scalar value.
      *
      * @param scalar
      *          the scalar to divide by
      * @return this
      */
     public Vector4i div(float scalar) {
-        return div(scalar, this);
+        float invscalar = 1.0f / scalar;
+        this.x = (int) (x * invscalar);
+        this.y = (int) (y * invscalar);
+        this.z = (int) (z * invscalar);
+        this.w = (int) (w * invscalar);
+        return this;
     }
 
     public Vector4i div(float scalar, Vector4i dest) {
@@ -935,14 +856,18 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
     }
 
     /**
-     * Divide all components of this vector by the given scalar value.
+     * Divide all components of this {@link Vector4i} by the given scalar value.
      *
      * @param scalar
      *          the scalar to divide by
      * @return this
      */
     public Vector4i div(int scalar) {
-        return div(scalar, this);
+        this.x = x / scalar;
+        this.y = y / scalar;
+        this.z = z / scalar;
+        this.w = w / scalar;
+        return this;
     }
 
     public Vector4i div(int scalar, Vector4i dest) {
@@ -954,7 +879,7 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
     }
 
     public long lengthSquared() {
-        return (long) x * x + (long) y * y + (long) z * z + (long) w * w;
+        return x * x + y * y + z * z + w * w;
     }
 
     /**
@@ -968,11 +893,11 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
      * @return the length squared of the given vector
      */
     public static long lengthSquared(int x, int y, int z, int w) {
-        return (long) x * x + (long) y * y + (long) z * z + (long) w * w;
+        return x * x + y * y + z * z + w * w;
     }
 
     public double length() {
-        return Math.sqrt((long) x * x + (long) y * y + (long) z * z + (long) w * w);
+        return Math.sqrt(x * x + y * y + z * z + w * w);
     }
 
     /**
@@ -986,11 +911,15 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
      * @return the length squared of the given vector
      */
     public static double length(int x, int y, int z, int w) {
-        return Math.sqrt((long) x * x + (long) y * y + (long) z * z + (long) w * w);
+        return Math.sqrt(x * x + y * y + z * z + w * w);
     }
 
     public double distance(Vector4ic v) {
-        return distance(v.x(), v.y(), v.z(), v.w());
+        int dx = this.x - v.x();
+        int dy = this.y - v.y();
+        int dz = this.z - v.z();
+        int dw = this.w - v.w();
+        return Math.sqrt(Math.fma(dx, dx, Math.fma(dy, dy, Math.fma(dz, dz, dw * dw))));
     }
 
     public double distance(int x, int y, int z, int w) {
@@ -1009,16 +938,20 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
         return Math.abs(x - x()) + Math.abs(y - y()) + Math.abs(z - z()) + Math.abs(w - w());
     }
 
-    public long distanceSquared(Vector4ic v) {
-        return distanceSquared(v.x(), v.y(), v.z(), v.w());
+    public int distanceSquared(Vector4ic v) {
+        int dx = this.x - v.x();
+        int dy = this.y - v.y();
+        int dz = this.z - v.z();
+        int dw = this.w - v.w();
+        return dx * dx + dy * dy + dz * dz + dw * dw;
     }
 
-    public long distanceSquared(int x, int y, int z, int w) {
+    public int distanceSquared(int x, int y, int z, int w) {
         int dx = this.x - x;
         int dy = this.y - y;
         int dz = this.z - z;
         int dw = this.w - w;
-        return (long) dx * dx + (long) dy * dy + (long) dz * dz + (long) dw * dw;
+        return dx * dx + dy * dy + dz * dz + dw * dw;
     }
 
     /**
@@ -1047,7 +980,7 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
         int dy = y1 - y2;
         int dz = z1 - z2;
         int dw = w1 - w2;
-        return Math.sqrt((long) dx * dx + (long) dy * dy + (long) dz * dz + (long) dw * dw);
+        return Math.sqrt(dx * dx + dy * dy + dz * dz + dw * dw);
     }
 
     /**
@@ -1076,11 +1009,11 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
         int dy = y1 - y2;
         int dz = z1 - z2;
         int dw = w1 - w2;
-        return (long) dx * dx + (long) dy * dy + (long) dz * dz + (long) dw * dw;
+        return dx * dx + dy * dy + dz * dz + dw * dw;
     }
 
-    public long dot(Vector4ic v) {
-        return (long) x * v.x() + (long) y * v.y() + (long) z * v.z() + (long) w * v.w();
+    public int dot(Vector4ic v) {
+        return x * v.x() + y * v.y() + z * v.z() + w * v.w();
     }
 
     /**
@@ -1102,7 +1035,11 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
      * @return this
      */
     public Vector4i negate() {
-        return negate(this);
+        this.x = -x;
+        this.y = -y;
+        this.z = -z;
+        this.w = -w;
+        return this;
     }
 
     public Vector4i negate(Vector4i dest) {
@@ -1120,9 +1057,9 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
      * 
      * @return the string representation
      */
-    public String toString() {
+    /*public String toString() {
         return Runtime.formatNumbers(toString(Options.NUMBER_FORMAT));
-    }
+    }*/
 
     /**
      * Return a string representation of this vector by formatting the vector components with the given {@link NumberFormat}.
@@ -1131,11 +1068,11 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
      *          the {@link NumberFormat} used to format the vector components with
      * @return the string representation
      */
-    public String toString(NumberFormat formatter) {
+    /*public String toString(NumberFormat formatter) {
         return "(" + formatter.format(x) + " " + formatter.format(y) + " " + formatter.format(z) + " " + formatter.format(w) + ")";
-    }
+    }*/
 
-    public void writeExternal(ObjectOutput out) throws IOException {
+    /*public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(x);
         out.writeInt(y);
         out.writeInt(z);
@@ -1147,7 +1084,7 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
         y = in.readInt();
         z = in.readInt();
         w = in.readInt();
-    }
+    }*/
 
     /**
      * Set the components of this vector to be the component-wise minimum of this and the other vector.
@@ -1157,7 +1094,11 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
      * @return this
      */
     public Vector4i min(Vector4ic v) {
-        return min(v, this);
+        this.x = x < v.x() ? x : v.x();
+        this.y = y < v.y() ? y : v.y();
+        this.z = z < v.z() ? z : v.z();
+        this.w = w < v.w() ? w : v.w();
+        return this;
     }
 
     public Vector4i min(Vector4ic v, Vector4i dest) {
@@ -1176,7 +1117,11 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
      * @return this
      */
     public Vector4i max(Vector4ic v) {
-        return max(v, this);
+        this.x = x > v.x() ? x : v.x();
+        this.y = y > v.y() ? y : v.y();
+        this.z = z > v.z() ? z : v.z();
+        this.w = w > v.w() ? w : v.w();
+        return this;
     }
 
     public Vector4i max(Vector4ic v, Vector4i dest) {
@@ -1193,7 +1138,11 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
      * @return this
      */
     public Vector4i absolute() {
-        return absolute(this);
+        this.x = Math.abs(x);
+        this.y = Math.abs(y);
+        this.z = Math.abs(z);
+        this.w = Math.abs(w);
+        return this;
     }
 
     public Vector4i absolute(Vector4i dest) {
@@ -1252,8 +1201,8 @@ public class Vector4i implements Externalizable, Cloneable, Vector4ic {
         return true;
     }
 
-    public Object clone() throws CloneNotSupportedException {
+    /*public Object clone() throws CloneNotSupportedException {
         return super.clone();
-    }
+    }*/
 
 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2016-2023 JOML
+ * Copyright (c) 2016-2022 JOML
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,7 @@
  */
 package org.joml;
 
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Arrays;
-import java.util.Locale;
 
 /**
  * Utility class for reading system properties.
@@ -41,7 +38,6 @@ public final class Options {
      */
     public static final boolean DEBUG = hasOption(System.getProperty("joml.debug", "false"));
 
-//#ifdef __HAS_UNSAFE__
     /**
      * Whether <i>not</i> to use sun.misc.Unsafe when copying memory with MemUtil.
      */
@@ -50,7 +46,6 @@ public final class Options {
      * Whether to <i>force</i> the use of sun.misc.Unsafe when copying memory with MemUtil.
      */
     public static final boolean FORCE_UNSAFE = hasOption(System.getProperty("joml.forceUnsafe", "false"));
-//#endif
 
     /**
      * Whether fast approximations of some java.lang.Math operations should be used.
@@ -89,12 +84,12 @@ public final class Options {
     /**
      * The {@link NumberFormat} used to format all numbers throughout all JOML classes.
      */
-    public static final NumberFormat NUMBER_FORMAT = decimalFormat();
+    //public static final NumberFormat NUMBER_FORMAT = decimalFormat();
 
     private Options() {
     }
 
-    private static NumberFormat decimalFormat() {
+    /*private static NumberFormat decimalFormat() {
         NumberFormat df;
         if (useNumberFormat) {
             char[] prec = new char[numberFormatDecimals];
@@ -105,7 +100,7 @@ public final class Options {
             df.setGroupingUsed(false);
         }
         return df;
-    }
+    }*/
 
     private static boolean hasOption(String v) {
         if (v == null)

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2015-2023 Richard Greenlees
+ * Copyright (c) 2015-2022 Richard Greenlees
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,14 +23,8 @@
  */
 package org.joml;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-//#ifdef __HAS_NIO__
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-//#endif
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -42,9 +36,9 @@ import java.text.NumberFormat;
  * @author Kai Burjack
  * @author F. Neurath
  */
-public class Vector4f implements Externalizable, Cloneable, Vector4fc {
+public class Vector4f implements /*Externalizable, Cloneable,*/ Vector4fc {
 
-    private static final long serialVersionUID = 1L;
+    //private static final long serialVersionUID = 1L;
 
     /**
      * The x component of the vector.
@@ -81,22 +75,6 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
         this.y = v.y();
         this.z = v.z();
         this.w = v.w();
-    }
-
-    /**
-     * Create a new {@link Vector4f} with the same values as <code>v</code>.
-     * <p>
-     * Note that due to the given vector <code>v</code> storing the components in double-precision,
-     * there is the possibility to lose precision.
-     *
-     * @param v
-     *        the {@link Vector4dc} to copy the values from
-     */
-    public Vector4f(Vector4dc v) {
-        x = (float) v.x();
-        y = (float) v.y();
-        z = (float) v.z();
-        w = (float) v.w();
     }
 
     /**
@@ -226,7 +204,6 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
         this.w = xyzw[3];
     }
 
-//#ifdef __HAS_NIO__
     /**
      * Create a new {@link Vector4f} and read this vector from the supplied {@link ByteBuffer}
      * at the current buffer {@link ByteBuffer#position() position}.
@@ -292,7 +269,6 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
     public Vector4f(int index, FloatBuffer buffer) {
         MemUtil.INSTANCE.get(this, index, buffer);
     }
-//#endif
 
     public float x() {
         return this.x;
@@ -311,63 +287,13 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
     }
 
     /**
-     * Copy the <code>(x, y, z)</code> components of <code>this</code> into the supplied <code>dest</code> vector
-     * and return it.
-     *
-     * @param dest
-     *      will hold the result
-     * @return dest
-     */
-    public Vector3f xyz(Vector3f dest) {
-        return dest.set(x, y, z);
-    }
-
-    /**
-     * Copy the <code>(x, y, z)</code> components of <code>this</code> into the supplied <code>dest</code> vector
-     * and return it.
-     *
-     * @param dest
-     *      will hold the result
-     * @return dest
-     */
-    public Vector3d xyz(Vector3d dest) {
-        return dest.set(x, y, z);
-    }
-
-    /**
-     * Copy the <code>(x, y)</code> components of <code>this</code> into the supplied <code>dest</code> vector
-     * and return it.
-     *
-     * @param dest
-     *      will hold the result
-     * @return dest
-     */
-    public Vector2f xy(Vector2f dest) {
-        return dest.set(x, y);
-    }
-
-    /**
-     * Copy the <code>(x, y)</code> components of <code>this</code> into the supplied <code>dest</code> vector
-     * and return it.
-     *
-     * @param dest
-     *      will hold the result
-     * @return dest
-     */
-    public Vector2d xy(Vector2d dest) {
-        return dest.set(x, y);
-    }
-
-    /**
-     * Set this vector to the values of the given <code>v</code>.
+     * Set this {@link Vector4f} to the values of the given <code>v</code>.
      * 
      * @param v
      *          the vector whose values will be copied into this
      * @return this
      */
     public Vector4f set(Vector4fc v) {
-        if (v == this)
-            return this;
         this.x = v.x();
         this.y = v.y();
         this.z = v.z();
@@ -376,7 +302,7 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
     }
 
     /**
-     * Set this vector to the values of the given <code>v</code>.
+     * Set this {@link Vector4f} to the values of the given <code>v</code>.
      * 
      * @param v
      *          the vector whose values will be copied into this
@@ -391,7 +317,7 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
     }
 
     /**
-     * Set this vector to the values of the given <code>v</code>.
+     * Set this {@link Vector4f} to the values of the given <code>v</code>.
      * <p>
      * Note that due to the given vector <code>v</code> storing the components in double-precision,
      * there is the possibility to lose precision.
@@ -423,23 +349,6 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
         this.y = v.y();
         this.z = v.z();
         this.w = w;
-        return this;
-    }
-
-    /**
-     * Set this vector to the <code>(x, y, z)</code> components of the given <code>v</code>.
-     * <p>
-     * Note that due to the given vector <code>v</code> storing the components in double-precision,
-     * there is the possibility to lose precision.
-     *
-     * @param v
-     *          the vector whose values will be copied into this
-     * @return this
-     */
-    public Vector4f set(Vector3dc v) {
-        this.x = (float) v.x();
-        this.y = (float) v.y();
-        this.z = (float) v.z();
         return this;
     }
 
@@ -606,7 +515,6 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
         return this;
     }
 
-//#ifdef __HAS_NIO__
     /**
      * Read this vector from the supplied {@link ByteBuffer} at the current
      * buffer {@link ByteBuffer#position() position}.
@@ -680,9 +588,7 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
         MemUtil.INSTANCE.get(this, index, buffer);
         return this;
     }
-//#endif
 
-//#ifdef __HAS_UNSAFE__
     /**
      * Set the values of this vector by reading 4 float values from off-heap memory,
      * starting at the given address.
@@ -698,10 +604,9 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
     public Vector4f setFromAddress(long address) {
         if (Options.NO_UNSAFE)
             throw new UnsupportedOperationException("Not supported when using joml.nounsafe");
-        MemUtil.MemUtilUnsafe.get(this, address);
+        //MemUtil.MemUtilUnsafe.get(this, address);
         return this;
     }
-//#endif
 
     /**
      * Set the value of the specified component of this vector.
@@ -733,7 +638,6 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
         return this;
     }
 
-//#ifdef __HAS_NIO__
     public FloatBuffer get(FloatBuffer buffer) {
         MemUtil.INSTANCE.put(this, buffer.position(), buffer);
         return buffer;
@@ -753,16 +657,13 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
         MemUtil.INSTANCE.put(this, index, buffer);
         return buffer;
     }
-//#endif
 
-//#ifdef __HAS_UNSAFE__
     public Vector4fc getToAddress(long address) {
         if (Options.NO_UNSAFE)
             throw new UnsupportedOperationException("Not supported when using joml.nounsafe");
-        MemUtil.MemUtilUnsafe.put(this, address);
+        //MemUtil.MemUtilUnsafe.put(this, address);
         return this;
     }
-//#endif
 
     /**
      * Subtract the supplied vector from this one.
@@ -772,7 +673,11 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * @return this
      */
     public Vector4f sub(Vector4fc v) {
-        return sub(v, this);
+        this.x = this.x - v.x();
+        this.y = this.y - v.y();
+        this.z = this.z - v.z();
+        this.w = this.w - v.w();
+        return this;
     }
 
     /**
@@ -789,7 +694,11 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * @return this
      */
     public Vector4f sub(float x, float y, float z, float w) {
-        return sub(x, y, z, w, this);
+        this.x = this.x - x;
+        this.y = this.y - y;
+        this.z = this.z - z;
+        this.w = this.w - w;
+        return this;
     }
 
     public Vector4f sub(Vector4fc v, Vector4f dest) {
@@ -816,7 +725,11 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * @return this
      */
     public Vector4f add(Vector4fc v) {
-        return add(v, this);
+        this.x = x + v.x();
+        this.y = y + v.y();
+        this.z = z + v.z();
+        this.w = w + v.w();
+        return this;
     }
 
     public Vector4f add(Vector4fc v, Vector4f dest) {
@@ -841,7 +754,11 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * @return this
      */
     public Vector4f add(float x, float y, float z, float w) {
-        return add(x, y, z, w, this);
+        this.x = this.x + x;
+        this.y = this.y + y;
+        this.z = this.z + z;
+        this.w = this.w + w;
+        return this;
     }
 
     public Vector4f add(float x, float y, float z, float w, Vector4f dest) {
@@ -862,7 +779,11 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * @return this
      */
     public Vector4f fma(Vector4fc a, Vector4fc b) {
-        return fma(a, b, this);
+        this.x = Math.fma(a.x(), b.x(), x);
+        this.y = Math.fma(a.y(), b.y(), y);
+        this.z = Math.fma(a.z(), b.z(), z);
+        this.w = Math.fma(a.w(), b.w(), w);
+        return this;
     }
 
     /**
@@ -875,7 +796,11 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * @return this
      */
     public Vector4f fma(float a, Vector4fc b) {
-        return fma(a, b, this);
+        this.x = Math.fma(a, b.x(), x);
+        this.y = Math.fma(a, b.y(), y);
+        this.z = Math.fma(a, b.z(), z);
+        this.w = Math.fma(a, b.w(), w);
+        return this;
     }
 
     public Vector4f fma(Vector4fc a, Vector4fc b, Vector4f dest) {
@@ -905,7 +830,10 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * @return this
      */
     public Vector4f mulAdd(Vector4fc a, Vector4fc b) {
-        return mulAdd(a, b, this);
+        this.x = Math.fma(x, a.x(), b.x());
+        this.y = Math.fma(y, a.y(), b.y());
+        this.z = Math.fma(z, a.z(), b.z());
+        return this;
     }
 
     /**
@@ -919,7 +847,10 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * @return this
      */
     public Vector4f mulAdd(float a, Vector4fc b) {
-        return mulAdd(a, b, this);
+        this.x = Math.fma(x, a, b.x());
+        this.y = Math.fma(y, a, b.y());
+        this.z = Math.fma(z, a, b.z());
+        return this;
     }
 
     public Vector4f mulAdd(Vector4fc a, Vector4fc b, Vector4f dest) {
@@ -937,14 +868,18 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
     }
 
     /**
-     * Multiply this vector component-wise by another Vector4f.
+     * Multiply this Vector4f component-wise by another Vector4f.
      * 
      * @param v
      *          the other vector
      * @return this
      */
     public Vector4f mul(Vector4fc v) {
-        return mul(v, this);
+        this.x = x * v.x();
+        this.y = y * v.y();
+        this.z = z * v.z();
+        this.w = w * v.w();
+        return this;
     }
 
     public Vector4f mul(Vector4fc v, Vector4f dest) {
@@ -956,14 +891,18 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
     }
 
     /**
-     * Divide this vector component-wise by another Vector4f.
+     * Divide this Vector4f component-wise by another Vector4f.
      * 
      * @param v
      *          the vector to divide by
      * @return this
      */
     public Vector4f div(Vector4fc v) {
-        return div(v, this);
+        this.x = x / v.x();
+        this.y = y / v.y();
+        this.z = z / v.z();
+        this.w = w / v.w();
+        return this;
     }
 
     public Vector4f div(Vector4fc v, Vector4f dest) {
@@ -975,7 +914,7 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
     }
 
     /**
-     * Multiply the given matrix mat with this vector and store the result in
+     * Multiply the given matrix mat with this Vector4f and store the result in
      * <code>this</code>.
      * 
      * @param mat
@@ -983,33 +922,35 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * @return this
      */
     public Vector4f mul(Matrix4fc mat) {
-        return mul(mat, this);
+        if ((mat.properties() & Matrix4fc.PROPERTY_AFFINE) != 0)
+            return mulAffine(mat, this);
+        return mulGeneric(mat, this);
     }
     public Vector4f mul(Matrix4fc mat, Vector4f dest) {
-        int prop = mat.properties();
-        if ((prop & Matrix4fc.PROPERTY_IDENTITY) != 0)
-            return dest.set(this);
-        if ((prop & Matrix4fc.PROPERTY_TRANSLATION) != 0)
-            return mulTranslation(mat, dest);
-        if ((prop & Matrix4fc.PROPERTY_AFFINE) != 0)
+        if ((mat.properties() & Matrix4fc.PROPERTY_AFFINE) != 0)
             return mulAffine(mat, dest);
         return mulGeneric(mat, dest);
     }
+
     /**
-     * Multiply the given affine matrix <code>mat</code> with this vector.
-     * <p>
-     * This method only works if the given matrix _only_ represents an affine transformation.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
+     * Multiply the transpose of the given matrix <code>mat</code> with this Vector4f and store the result in
+     * <code>this</code>.
+     * 
      * @param mat
-     *          the affine matrix to multiply the vector with
+     *          the matrix whose transpose to multiply the vector with
      * @return this
      */
-    public Vector4f mulAffine(Matrix4fc mat) {
-        return mulAffine(mat, this);
+    public Vector4f mulTranspose(Matrix4fc mat) {
+        if ((mat.properties() & Matrix4fc.PROPERTY_AFFINE) != 0)
+            return mulAffineTranspose(mat, this);
+        return mulGenericTranspose(mat, this);
     }
+    public Vector4f mulTranspose(Matrix4fc mat, Vector4f dest) {
+        if ((mat.properties() & Matrix4fc.PROPERTY_AFFINE) != 0)
+            return mulAffineTranspose(mat, dest);
+        return mulGenericTranspose(mat, dest);
+    }
+
     public Vector4f mulAffine(Matrix4fc mat, Vector4f dest) {
         float x = this.x, y = this.y, z = this.z, w = this.w;
         dest.x = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30() * w)));
@@ -1019,41 +960,15 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
         return dest;
     }
 
-    /**
-     * Multiply the transpose of the given matrix <code>mat</code> with this vector and store the result in
-     * <code>this</code>.
-     * <p>
-     * Note that this method performs the operation <code>M^T * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     * 
-     * @param mat
-     *          the matrix whose transpose to multiply the vector with
-     * @return this
-     */
-    public Vector4f mulTranspose(Matrix4fc mat) {
-        return mulTranspose(mat, this);
+    private Vector4f mulGeneric(Matrix4fc mat, Vector4f dest) {
+        float x = this.x, y = this.y, z = this.z, w = this.w;
+        dest.x = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30() * w)));
+        dest.y = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31() * w)));
+        dest.z = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32() * w)));
+        dest.w = Math.fma(mat.m03(), x, Math.fma(mat.m13(), y, Math.fma(mat.m23(), z, mat.m33() * w)));
+        return dest;
     }
-    public Vector4f mulTranspose(Matrix4fc mat, Vector4f dest) {
-        int prop = mat.properties();
-        if ((prop & Matrix4fc.PROPERTY_IDENTITY) != 0)
-            return dest.set(this);
-        if ((prop & Matrix4fc.PROPERTY_AFFINE) != 0)
-            return mulAffineTranspose(mat, dest);
-        return mulGenericTranspose(mat, dest);
-    }
-    /**
-     * Multiply the transpose of the given affine matrix <code>mat</code> with this vector.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the affine matrix whose transpose to multiply the vector with
-     * @return this
-     */
-    public Vector4f mulAffineTranspose(Matrix4fc mat) {
-        return mulAffineTranspose(mat, this);
-    }
+
     public Vector4f mulAffineTranspose(Matrix4fc mat, Vector4f dest) {
         float x = this.x, y = this.y, z = this.z, w = this.w;
         dest.x = Math.fma(mat.m00(), x, Math.fma(mat.m01(), y, mat.m02() * z));
@@ -1062,22 +977,7 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
         dest.w = Math.fma(mat.m30(), x, Math.fma(mat.m31(), y, mat.m32() * z + w));
         return dest;
     }
-    /**
-     * Multiply the transpose of the given matrix <code>mat</code> with this vector.
-     * <p>
-     * This method does not make any assumptions or optimizations about the properties of the specified matrix.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the affine matrix whose transpose to multiply the vector with
-     * @return this
-     */
-    public Vector4f mulGenericTranspose(Matrix4fc mat) {
-        return mulGenericTranspose(mat, this);
-    }
-    public Vector4f mulGenericTranspose(Matrix4fc mat, Vector4f dest) {
+    private Vector4f mulGenericTranspose(Matrix4fc mat, Vector4f dest) {
         float x = this.x, y = this.y, z = this.z, w = this.w;
         dest.x = Math.fma(mat.m00(), x, Math.fma(mat.m01(), y, Math.fma(mat.m02(), z, mat.m03() * w)));
         dest.y = Math.fma(mat.m10(), x, Math.fma(mat.m11(), y, Math.fma(mat.m12(), z, mat.m13() * w)));
@@ -1087,267 +987,69 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
     }
 
     /**
-     * Multiply the given matrix <code>mat</code>, which is assumed to only contain translation, with this vector.
-     * <p>
-     * This method only works if the given matrix _only_ represents a translation.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the affine matrix to multiply the vector with
-     * @return this
-     */
-    public Vector4f mulTranslation(Matrix4fc mat) {
-        return mulTranslation(mat, this);
-    }
-    public Vector4f mulTranslation(Matrix4fc mat, Vector4f dest) {
-        float x = this.x, y = this.y, z = this.z, w = this.w;
-        dest.x = Math.fma(mat.m30(), w, x);
-        dest.y = Math.fma(mat.m31(), w, y);
-        dest.z = Math.fma(mat.m32(), w, z);
-        dest.w = w;
-        return dest;
-    }
-
-    /**
-     * Multiply the given matrix <code>mat</code> with this vector.
-     * <p>
-     * This method does not make any assumptions or optimizations about the properties of the specified matrix.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the matrix whose transpose to multiply the vector with
-     * @return this
-     */
-    public Vector4f mulGeneric(Matrix4fc mat) {
-        return mulGeneric(mat, this);
-    }
-    public Vector4f mulGeneric(Matrix4fc mat, Vector4f dest) {
-        float x = this.x, y = this.y, z = this.z, w = this.w;
-        dest.x = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30() * w)));
-        dest.y = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31() * w)));
-        dest.z = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32() * w)));
-        dest.w = Math.fma(mat.m03(), x, Math.fma(mat.m13(), y, Math.fma(mat.m23(), z, mat.m33() * w)));
-        return dest;
-    }
-
-    /**
-     * Multiply the given matrix mat with this vector.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
+     * Multiply the given matrix mat with this Vector4f and store the result in
+     * <code>this</code>.
+     * 
      * @param mat
      *          the matrix to multiply the vector with
      * @return this
      */
     public Vector4f mul(Matrix4x3fc mat) {
-        return mul(mat, this);
+        float x = this.x, y = this.y, z = this.z, w = this.w;
+        this.x = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30() * w)));
+        this.y = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31() * w)));
+        this.z = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32() * w)));
+        this.w = w;
+        return this;
     }
+
     public Vector4f mul(Matrix4x3fc mat, Vector4f dest) {
-        int prop = mat.properties();
-        if ((prop & Matrix4x3fc.PROPERTY_IDENTITY) != 0)
-            return dest.set(this);
-        if ((prop & Matrix4x3fc.PROPERTY_TRANSLATION) != 0)
-            return mulTranslation(mat, dest);
-        return mulGeneric(mat, dest);
-    }
-    /**
-     * Multiply the given matrix <code>mat</code> with this vector.
-     * <p>
-     * This method does not make any assumptions or optimizations about the properties of the specified matrix.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the matrix whose transpose to multiply the vector with
-     * @return this
-     */
-    public Vector4f mulGeneric(Matrix4x3fc mat) {
-        return mulGeneric(mat, this);
-    }
-    public Vector4f mulGeneric(Matrix4x3fc mat, Vector4f dest) {
-        float rx = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30() * w)));
-        float ry = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31() * w)));
-        float rz = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32() * w)));
-        dest.x = rx;
-        dest.y = ry;
-        dest.z = rz;
-        dest.w = w;
-        return dest;
-    }
-    /**
-     * Multiply the given matrix <code>mat</code>, which is assumed to only contain translation, with this vector.
-     * <p>
-     * This method only works if the given matrix _only_ represents a translation.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the matrix whose transpose to multiply the vector with
-     * @return this
-     */
-    public Vector4f mulTranslation(Matrix4x3fc mat) {
-        return mulTranslation(mat, this);
-    }
-    public Vector4f mulTranslation(Matrix4x3fc mat, Vector4f dest) {
-        dest.x = Math.fma(mat.m30(), w, x);
-        dest.y = Math.fma(mat.m31(), w, y);
-        dest.z = Math.fma(mat.m32(), w, z);
+        float x = this.x, y = this.y, z = this.z, w = this.w;
+        dest.x = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30() * w)));
+        dest.y = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31() * w)));
+        dest.z = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32() * w)));
         dest.w = w;
         return dest;
     }
 
+    public Vector4f mulProject(Matrix4fc mat, Vector4f dest) {
+        float x = this.x, y = this.y, z = this.z, w = this.w;
+        float invW = 1.0f / Math.fma(mat.m03(), x, Math.fma(mat.m13(), y, Math.fma(mat.m23(), z, mat.m33() * w)));
+        dest.x = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30() * w))) * invW;
+        dest.y = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31() * w))) * invW;
+        dest.z = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32() * w))) * invW;
+        dest.w = 1.0f;
+        return dest;
+    }
+
     /**
-     * Multiply the given matrix <code>mat</code> with this vector and perform perspective division.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
+     * Multiply the given matrix <code>mat</code> with this Vector4f, perform perspective division.
+     * 
      * @param mat
      *          the matrix to multiply this vector by
      * @return this
      */
     public Vector4f mulProject(Matrix4fc mat) {
-        return mulProject(mat, this);
+        float x = this.x, y = this.y, z = this.z, w = this.w;
+        float invW = 1.0f / Math.fma(mat.m03(), x, Math.fma(mat.m13(), y, Math.fma(mat.m23(), z, mat.m33() * w)));
+        this.x = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30() * w))) * invW;
+        this.y = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31() * w))) * invW;
+        this.z = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32() * w))) * invW;
+        this.w = 1.0f;
+        return this;
     }
-    public Vector4f mulProject(Matrix4fc mat, Vector4f dest) {
-        int prop = mat.properties();
-        if ((prop & Matrix4fc.PROPERTY_IDENTITY) != 0)
-            return dest.set(this);
-        if ((prop & Matrix4fc.PROPERTY_TRANSLATION) != 0)
-            return mulProjectTranslation(mat, dest);
-        if ((prop & Matrix4fc.PROPERTY_AFFINE) != 0)
-            return mulProjectAffine(mat, dest);
-        return mulProjectGeneric(mat, dest);
-    }
+
     public Vector3f mulProject(Matrix4fc mat, Vector3f dest) {
-        int prop = mat.properties();
-        if ((prop & Matrix4fc.PROPERTY_IDENTITY) != 0)
-            return dest.set(this);
-        if ((prop & Matrix4fc.PROPERTY_TRANSLATION) != 0)
-            return mulProjectTranslation(mat, dest);
-        if ((prop & Matrix4fc.PROPERTY_AFFINE) != 0)
-            return mulProjectAffine(mat, dest);
-        return mulProjectGeneric(mat, dest);
-    }
-    /**
-     * Multiply the given matrix <code>mat</code> with this vector and perform perspective division.
-     * <p>
-     * This method does not make any assumptions or optimizations about the properties of the specified matrix.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the matrix to multiply this vector by
-     * @return this
-     */
-    public Vector4f mulProjectGeneric(Matrix4fc mat) {
-        return mulProjectGeneric(mat, this);
-    }
-    public Vector4f mulProjectGeneric(Matrix4fc mat, Vector4f dest) {
+        float x = this.x, y = this.y, z = this.z, w = this.w;
         float invW = 1.0f / Math.fma(mat.m03(), x, Math.fma(mat.m13(), y, Math.fma(mat.m23(), z, mat.m33() * w)));
-        float rx = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30() * w))) * invW;
-        float ry = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31() * w))) * invW;
-        float rz = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32() * w))) * invW;
-        dest.x = rx;
-        dest.y = ry;
-        dest.z = rz;
-        dest.w = 1.0f;
-        return dest;
-    }
-    public Vector3f mulProjectGeneric(Matrix4fc mat, Vector3f dest) {
-        float invW = 1.0f / Math.fma(mat.m03(), x, Math.fma(mat.m13(), y, Math.fma(mat.m23(), z, mat.m33() * w)));
-        float rx = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30() * w))) * invW;
-        float ry = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31() * w))) * invW;
-        float rz = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32() * w))) * invW;
-        dest.x = rx;
-        dest.y = ry;
-        dest.z = rz;
-        return dest;
-    }
-    /**
-     * Multiply the given matrix <code>mat</code>, which is assumed to only contain translation,
-     * with this vector and perform perspective division.
-     * <p>
-     * This method does not make any assumptions or optimizations about the properties of the specified matrix.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the matrix to multiply this vector by
-     * @return this
-     */
-    public Vector4f mulProjectTranslation(Matrix4fc mat) {
-        return mulProjectTranslation(mat, this);
-    }
-    public Vector4f mulProjectTranslation(Matrix4fc mat, Vector4f dest) {
-        float invW = 1.0f / w;
-        float rx = Math.fma(mat.m00(), x, mat.m30() * w) * invW;
-        float ry = Math.fma(mat.m11(), y, mat.m31() * w) * invW;
-        float rz = Math.fma(mat.m22(), z, mat.m32() * w) * invW;
-        dest.x = rx;
-        dest.y = ry;
-        dest.z = rz;
-        dest.w = 1.0f;
-        return dest;
-    }
-    public Vector3f mulProjectTranslation(Matrix4fc mat, Vector3f dest) {
-        float invW = 1.0f / w;
-        float rx = Math.fma(mat.m00(), x, mat.m30() * w) * invW;
-        float ry = Math.fma(mat.m11(), y, mat.m31() * w) * invW;
-        float rz = Math.fma(mat.m22(), z, mat.m32() * w) * invW;
-        dest.x = rx;
-        dest.y = ry;
-        dest.z = rz;
-        return dest;
-    }
-    /**
-     * Multiply the given affine matrix <code>mat</code>, with this vector and perform perspective division.
-     * <p>
-     * This method only works if the given matrix _only_ represents an affine transformation.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the matrix to multiply this vector by
-     * @return this
-     */
-    public Vector4f mulProjectAffine(Matrix4fc mat) {
-        return mulProjectAffine(mat, this);
-    }
-    public Vector4f mulProjectAffine(Matrix4fc mat, Vector4f dest) {
-        float invW = 1.0f / w;
-        float rx = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30() * w))) * invW;
-        float ry = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31() * w))) * invW;
-        float rz = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32() * w))) * invW;
-        dest.x = rx;
-        dest.y = ry;
-        dest.z = rz;
-        dest.w = 1.0f;
-        return dest;
-    }
-    public Vector3f mulProjectAffine(Matrix4fc mat, Vector3f dest) {
-        float invW = 1.0f / w;
-        float rx = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30() * w))) * invW;
-        float ry = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31() * w))) * invW;
-        float rz = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32() * w))) * invW;
-        dest.x = rx;
-        dest.y = ry;
-        dest.z = rz;
+        dest.x = Math.fma(mat.m00(), x, Math.fma(mat.m10(), y, Math.fma(mat.m20(), z, mat.m30() * w))) * invW;
+        dest.y = Math.fma(mat.m01(), x, Math.fma(mat.m11(), y, Math.fma(mat.m21(), z, mat.m31() * w))) * invW;
+        dest.z = Math.fma(mat.m02(), x, Math.fma(mat.m12(), y, Math.fma(mat.m22(), z, mat.m32() * w))) * invW;
         return dest;
     }
 
     /**
-     * Multiply all components of this vector by the given scalar
+     * Multiply all components of this {@link Vector4f} by the given scalar
      * value.
      * 
      * @param scalar
@@ -1355,7 +1057,11 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * @return this
      */
     public Vector4f mul(float scalar) {
-        return mul(scalar, this);
+        this.x = x * scalar;
+        this.y = y * scalar;
+        this.z = z * scalar;
+        this.w = w * scalar;
+        return this;
     }
 
     public Vector4f mul(float scalar, Vector4f dest) {
@@ -1367,7 +1073,7 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
     }
 
     /**
-     * Multiply the components of this vector by the given scalar values and store the result in <code>this</code>.
+     * Multiply the components of this Vector4f by the given scalar values and store the result in <code>this</code>.
      * 
      * @param x
      *          the x component to multiply by
@@ -1380,7 +1086,11 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * @return this
      */
     public Vector4f mul(float x, float y, float z, float w) {
-        return mul(x, y, z, w, this);
+        this.x = this.x * x;
+        this.y = this.y * y;
+        this.z = this.z * z;
+        this.w = this.w * w;
+        return this;
     }
 
     public Vector4f mul(float x, float y, float z, float w, Vector4f dest) {
@@ -1392,7 +1102,7 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
     }
 
     /**
-     * Divide all components of this vector by the given scalar
+     * Divide all components of this {@link Vector4f} by the given scalar
      * value.
      * 
      * @param scalar
@@ -1400,7 +1110,12 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * @return this
      */
     public Vector4f div(float scalar) {
-        return div(scalar, this);
+        float inv = 1.0f / scalar;
+        this.x = x * inv;
+        this.y = y * inv;
+        this.z = z * inv;
+        this.w = w * inv;
+        return this;
     }
 
     public Vector4f div(float scalar, Vector4f dest) {
@@ -1413,7 +1128,7 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
     }
 
     /**
-     * Divide the components of this vector by the given scalar values and store the result in <code>this</code>.
+     * Divide the components of this Vector4f by the given scalar values and store the result in <code>this</code>.
      * 
      * @param x
      *          the x component to divide by
@@ -1426,7 +1141,11 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * @return this
      */
     public Vector4f div(float x, float y, float z, float w) {
-        return div(x, y, z, w, this);
+        this.x = this.x / x;
+        this.y = this.y / y;
+        this.z = this.z / z;
+        this.w = this.w / w;
+        return this;
     }
 
     public Vector4f div(float x, float y, float z, float w, Vector4f dest) {
@@ -1456,13 +1175,7 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
 
     /**
      * Rotate this vector the specified radians around the given rotation axis.
-     * <p>
-     * This vector's <code>w</code> component is ignored.
-     * <p>
-     * If the rotation axis is either <code>(1, 0, 0)</code>, <code>(0, 1, 0)</code> or <code>(0, 0, 1)</code>,
-     * then {@link #rotateX(float) rotateX()}, {@link #rotateY(float) rotateY()} or
-     * {@link #rotateZ(float) rotateZ()}, respectively, should be used instead.
-     *
+     * 
      * @param angle
      *          the angle in radians
      * @param x
@@ -1473,8 +1186,14 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      *          the z component of the rotation axis
      * @return this
      */
-    public Vector4f rotateAxis(float angle, float x, float y, float z) {
-        return rotateAxis(angle, x, y, z, this);
+    public Vector4f rotateAbout(float angle, float x, float y, float z) {
+        if (y == 0.0f && z == 0.0f && Math.absEqualsOne(x))
+            return rotateX(x * angle, this);
+        else if (x == 0.0f && z == 0.0f && Math.absEqualsOne(y))
+            return rotateY(y * angle, this);
+        else if (x == 0.0f && y == 0.0f && Math.absEqualsOne(z))
+            return rotateZ(z * angle, this);
+        return rotateAxisInternal(angle, x, y, z, this);
     }
 
     public Vector4f rotateAxis(float angle, float aX, float aY, float aZ, Vector4f dest) {
@@ -1508,7 +1227,12 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * @return this
      */
     public Vector4f rotateX(float angle) {
-        return rotateX(angle, this);
+        float sin = Math.sin(angle), cos = Math.cosFromSin(sin, angle);
+        float y = this.y * cos - this.z * sin;
+        float z = this.y * sin + this.z * cos;
+        this.y = y;
+        this.z = z;
+        return this;
     }
 
     public Vector4f rotateX(float angle, Vector4f dest) {
@@ -1530,7 +1254,12 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * @return this
      */
     public Vector4f rotateY(float angle) {
-        return rotateY(angle, this);
+        float sin = Math.sin(angle), cos = Math.cosFromSin(sin, angle);
+        float x =  this.x * cos + this.z * sin;
+        float z = -this.x * sin + this.z * cos;
+        this.x = x;
+        this.z = z;
+        return this;
     }
 
     public Vector4f rotateY(float angle, Vector4f dest) {
@@ -1552,7 +1281,12 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * @return this
      */
     public Vector4f rotateZ(float angle) {
-        return rotateZ(angle, this);
+        float sin = Math.sin(angle), cos = Math.cosFromSin(sin, angle);
+        float x = this.x * cos - this.y * sin;
+        float y = this.x * sin + this.y * cos;
+        this.x = x;
+        this.y = y;
+        return this;
     }
 
     public Vector4f rotateZ(float angle, Vector4f dest) {
@@ -1626,7 +1360,12 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * @return this
      */
     public Vector4f normalize() {
-        return normalize(this);
+        float invLength = 1.0f / length();
+        this.x = x * invLength;
+        this.y = y * invLength;
+        this.z = z * invLength;
+        this.w = w * invLength;
+        return this;
     }
 
     public Vector4f normalize(Vector4f dest) {
@@ -1646,7 +1385,12 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * @return this
      */
     public Vector4f normalize(float length) {
-        return normalize(length, this);
+        float invLength = 1.0f / length() * length;
+        this.x = x * invLength;
+        this.y = y * invLength;
+        this.z = z * invLength;
+        this.w = w * invLength;
+        return this;
     }
 
     public Vector4f normalize(float length, Vector4f dest) {
@@ -1664,7 +1408,12 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * @return this
      */
     public Vector4f normalize3() {
-        return normalize3(this);
+        float invLength = Math.invsqrt(Math.fma(x, x, Math.fma(y, y, z * z)));
+        this.x = x * invLength;
+        this.y = y * invLength;
+        this.z = z * invLength;
+        this.w = w * invLength;
+        return this;
     }
 
     public Vector4f normalize3(Vector4f dest) {
@@ -1677,7 +1426,11 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
     }
 
     public float distance(Vector4fc v) {
-        return distance(v.x(), v.y(), v.z(), v.w());
+        float dx = this.x - v.x();
+        float dy = this.y - v.y();
+        float dz = this.z - v.z();
+        float dw = this.w - v.w();
+        return Math.sqrt(Math.fma(dx, dx, Math.fma(dy, dy, Math.fma(dz, dz, dw * dw))));
     }
 
     public float distance(float x, float y, float z, float w) {
@@ -1689,7 +1442,11 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
     }
 
     public float distanceSquared(Vector4fc v) {
-        return distanceSquared(v.x(), v.y(), v.z(), v.w());
+        float dx = this.x - v.x();
+        float dy = this.y - v.y();
+        float dz = this.z - v.z();
+        float dw = this.w - v.w();
+        return Math.fma(dx, dx, Math.fma(dy, dy, Math.fma(dz, dz, dw * dw)));
     }
 
     public float distanceSquared(float x, float y, float z, float w) {
@@ -1801,7 +1558,11 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * @return this
      */
     public Vector4f negate() {
-        return negate(this);
+        this.x = -x;
+        this.y = -y;
+        this.z = -z;
+        this.w = -w;
+        return this;
     }
 
     public Vector4f negate(Vector4f dest) {
@@ -1819,9 +1580,9 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * 
      * @return the string representation
      */
-    public String toString() {
+    /*public String toString() {
         return Runtime.formatNumbers(toString(Options.NUMBER_FORMAT));
-    }
+    }*/
 
     /**
      * Return a string representation of this vector by formatting the vector components with the given {@link NumberFormat}.
@@ -1830,11 +1591,11 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      *          the {@link NumberFormat} used to format the vector components with
      * @return the string representation
      */
-    public String toString(NumberFormat formatter) {
+    /*public String toString(NumberFormat formatter) {
         return "(" + Runtime.format(x, formatter) + " " + Runtime.format(y, formatter) + " " + Runtime.format(z, formatter) + " " + Runtime.format(w, formatter) + ")";
-    }
+    }*/
 
-    public void writeExternal(ObjectOutput out) throws IOException {
+    /*public void writeExternal(ObjectOutput out) throws IOException {
         out.writeFloat(x);
         out.writeFloat(y);
         out.writeFloat(z);
@@ -1843,7 +1604,7 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
 
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         this.set(in.readFloat(), in.readFloat(), in.readFloat(), in.readFloat());
-    }
+    }*/
 
     /**
      * Set the components of this vector to be the component-wise minimum of this and the other vector.
@@ -1853,7 +1614,12 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * @return this
      */
     public Vector4f min(Vector4fc v) {
-        return min(v, this);
+        float x = this.x, y = this.y, z = this.z, w = this.w;
+        this.x = x < v.x() ? x : v.x();
+        this.y = y < v.y() ? y : v.y();
+        this.z = z < v.z() ? z : v.z();
+        this.w = w < v.w() ? w : v.w();
+        return this;
     }
 
     public Vector4f min(Vector4fc v, Vector4f dest) {
@@ -1873,7 +1639,12 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * @return this
      */
     public Vector4f max(Vector4fc v) {
-        return max(v, this);
+        float x = this.x, y = this.y, z = this.z, w = this.w;
+        this.x = x > v.x() ? x : v.x();
+        this.y = y > v.y() ? y : v.y();
+        this.z = z > v.z() ? z : v.z();
+        this.w = w > v.w() ? w : v.w();
+        return this;
     }
 
     public Vector4f max(Vector4fc v, Vector4f dest) {
@@ -1919,7 +1690,7 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
             return true;
         if (v == null)
             return false;
-        if (getClass() != v.getClass())
+        if (!(v instanceof Vector4fc))
             return false;
         if (!Runtime.equals(x, v.x(), delta))
             return false;
@@ -1980,7 +1751,11 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * @return this
      */
     public Vector4f lerp(Vector4fc other, float t) {
-        return lerp(other, t, this);
+        this.x = Math.fma(other.x() - x, t, x);
+        this.y = Math.fma(other.y() - y, t, y);
+        this.z = Math.fma(other.z() - z, t, z);
+        this.w = Math.fma(other.w() - w, t, w);
+        return this;
     }
 
     public Vector4f lerp(Vector4fc other, float t, Vector4f dest) {
@@ -2068,7 +1843,11 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * @return this
      */
     public Vector4f floor() {
-        return floor(this);
+        this.x = Math.floor(x);
+        this.y = Math.floor(y);
+        this.z = Math.floor(z);
+        this.w = Math.floor(w);
+        return this;
     }
 
     public Vector4f floor(Vector4f dest) {
@@ -2087,7 +1866,11 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * @return this
      */
     public Vector4f ceil() {
-        return ceil(this);
+        this.x = Math.ceil(x);
+        this.y = Math.ceil(y);
+        this.z = Math.ceil(z);
+        this.w = Math.ceil(w);
+        return this;
     }
 
     public Vector4f ceil(Vector4f dest) {
@@ -2105,7 +1888,11 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * @return this
      */
     public Vector4f round() {
-        return round(this);
+        this.x = Math.round(x);
+        this.y = Math.round(y);
+        this.z = Math.round(z);
+        this.w = Math.round(w);
+        return this;
     }
 
     public Vector4f round(Vector4f dest) {
@@ -2126,7 +1913,11 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
      * @return this
      */
     public Vector4f absolute() {
-        return absolute(this);
+        this.x = Math.abs(x);
+        this.y = Math.abs(y);
+        this.z = Math.abs(z);
+        this.w = Math.abs(w);
+        return this;
     }
 
     public Vector4f absolute(Vector4f dest) {
@@ -2137,8 +1928,8 @@ public class Vector4f implements Externalizable, Cloneable, Vector4fc {
         return dest;
     }
 
-    public Object clone() throws CloneNotSupportedException {
+    /*public Object clone() throws CloneNotSupportedException {
         return super.clone();
-    }
+    }*/
 
 }

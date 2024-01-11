@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2016-2023 JOML
+ * Copyright (c) 2016-2022 JOML
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,11 @@
  */
 package org.joml;
 
-//#ifdef __HAS_NIO__
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-//#endif
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Interface to a read-only view of a 4-dimensional vector of single-precision floats.
@@ -56,7 +56,6 @@ public interface Vector4fc {
      */
     float w();
 
-//#ifdef __HAS_NIO__
     /**
      * Store this vector into the supplied {@link FloatBuffer} at the current
      * buffer {@link FloatBuffer#position() position}.
@@ -118,9 +117,7 @@ public interface Vector4fc {
      * @return the passed in buffer
      */
     ByteBuffer get(int index, ByteBuffer buffer);
-//#endif
 
-//#ifdef __HAS_UNSAFE__
     /**
      * Store this vector at the given off-heap memory address.
      * <p>
@@ -133,7 +130,6 @@ public interface Vector4fc {
      * @return this
      */
     Vector4fc getToAddress(long address);
-//#endif
 
     /**
      * Subtract the supplied vector from this one and store the result in <code>dest</code>.
@@ -248,7 +244,7 @@ public interface Vector4fc {
     Vector4f mulAdd(float a, Vector4fc b, Vector4f dest);
 
     /**
-     * Multiply this vector component-wise by another vector and store the result in <code>dest</code>.
+     * Multiply this Vector4f component-wise by another Vector4f and store the result in <code>dest</code>.
      * 
      * @param v
      *          the other vector
@@ -259,7 +255,7 @@ public interface Vector4fc {
     Vector4f mul(Vector4fc v, Vector4f dest);
 
     /**
-     * Divide this vector component-wise by another vector and store the result in <code>dest</code>.
+     * Divide this Vector4f component-wise by another Vector4f and store the result in <code>dest</code>.
      * 
      * @param v
      *          the vector to divide by
@@ -270,12 +266,9 @@ public interface Vector4fc {
     Vector4f div(Vector4fc v, Vector4f dest);
 
     /**
-     * Multiply the given matrix mat with this vector and store the result in
+     * Multiply the given matrix mat with this Vector4f and store the result in
      * <code>dest</code>.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
+     * 
      * @param mat
      *          the matrix to multiply the vector with
      * @param dest
@@ -285,28 +278,9 @@ public interface Vector4fc {
     Vector4f mul(Matrix4fc mat, Vector4f dest);
 
     /**
-     * Multiply the given matrix <code>mat</code> with this vector and store the result in <code>dest</code>.
-     * <p>
-     * This method does not make any assumptions or optimizations about the properties of the specified matrix.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the matrix whose transpose to multiply the vector with
-     * @param dest
-     *          the destination vector to hold the result
-     * @return dest
-     */
-    Vector4f mulGeneric(Matrix4fc mat, Vector4f dest);
-
-    /**
-     * Multiply the transpose of the given matrix <code>mat</code> with this vector and store the result in
+     * Multiply the transpose of the given matrix <code>mat</code> with this Vector4f and store the result in
      * <code>dest</code>.
-     * <p>
-     * Note that this method performs the operation <code>M^T * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
+     * 
      * @param mat
      *          the matrix whose transpose to multiply the vector with
      * @param dest
@@ -316,31 +290,9 @@ public interface Vector4fc {
     Vector4f mulTranspose(Matrix4fc mat, Vector4f dest);
 
     /**
-     * Multiply the given matrix <code>mat</code>, which is assumed to only contain translation, with this vector
-     * and store the result in <code>dest</code>.
-     * <p>
-     * This method only works if the given matrix _only_ represents a translation.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the affine matrix to multiply the vector with
-     * @param dest
-     *          the destination vector to hold the result
-     * @return dest
-     */
-    Vector4f mulTranslation(Matrix4fc mat, Vector4f dest);
-
-    /**
-     * Multiply the given affine matrix <code>mat</code> with this vector and store the result in
+     * Multiply the given affine matrix mat with this Vector4f and store the result in
      * <code>dest</code>.
-     * <p>
-     * This method only works if the given matrix _only_ represents an affine transformation.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
+     * 
      * @param mat
      *          the affine matrix to multiply the vector with
      * @param dest
@@ -350,12 +302,9 @@ public interface Vector4fc {
     Vector4f mulAffine(Matrix4fc mat, Vector4f dest);
 
     /**
-     * Multiply the transpose of the given affine matrix <code>mat</code> with this vector and store the result in
+     * Multiply the transpose of the given affine matrix <code>mat</code> with this Vector4f and store the result in
      * <code>dest</code>.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
+     * 
      * @param mat
      *          the affine matrix whose transpose to multiply the vector with
      * @param dest
@@ -365,29 +314,9 @@ public interface Vector4fc {
     Vector4f mulAffineTranspose(Matrix4fc mat, Vector4f dest);
 
     /**
-     * Multiply the transpose of the given matrix <code>mat</code> with this vector and store the result in
+     * Multiply the given matrix mat with this Vector4f and store the result in
      * <code>dest</code>.
-     * <p>
-     * This method does not make any assumptions or optimizations about the properties of the specified matrix.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the affine matrix whose transpose to multiply the vector with
-     * @param dest
-     *          the destination vector to hold the result
-     * @return dest
-     */
-    Vector4f mulGenericTranspose(Matrix4fc mat, Vector4f dest);
-
-    /**
-     * Multiply the given matrix mat with this vector and store the result in
-     * <code>dest</code>.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
+     * 
      * @param mat
      *          the matrix to multiply the vector with
      * @param dest
@@ -397,45 +326,9 @@ public interface Vector4fc {
     Vector4f mul(Matrix4x3fc mat, Vector4f dest);
 
     /**
-     * Multiply the given matrix <code>mat</code>, which is assumed to only contain translation,
-     * with this vector and store the result in <code>dest</code>.
-     * <p>
-     * This method only works if the given matrix _only_ represents a translation.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the matrix whose transpose to multiply the vector with
-     * @param dest
-     *          the destination vector to hold the result
-     * @return dest
-     */
-    Vector4f mulTranslation(Matrix4x3fc mat, Vector4f dest);
-
-    /**
-     * Multiply the given matrix <code>mat</code> with this vector and store the result in <code>dest</code>.
-     * <p>
-     * This method does not make any assumptions or optimizations about the properties of the specified matrix.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the matrix whose transpose to multiply the vector with
-     * @param dest
-     *          the destination vector to hold the result
-     * @return dest
-     */
-    Vector4f mulGeneric(Matrix4x3fc mat, Vector4f dest);
-
-    /**
-     * Multiply the given matrix <code>mat</code> with this vector, perform perspective division
+     * Multiply the given matrix <code>mat</code> with this Vector4f, perform perspective division
      * and store the result in <code>dest</code>.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
+     * 
      * @param mat
      *          the matrix to multiply this vector by
      * @param dest
@@ -445,12 +338,9 @@ public interface Vector4fc {
     Vector4f mulProject(Matrix4fc mat, Vector4f dest);
 
     /**
-     * Multiply the given matrix <code>mat</code> with this vector, perform perspective division
+     * Multiply the given matrix <code>mat</code> with this Vector4f, perform perspective division
      * and store the <code>(x, y, z)</code> result in <code>dest</code>.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
+     * 
      * @param mat
      *          the matrix to multiply this vector by
      * @param dest
@@ -460,109 +350,7 @@ public interface Vector4fc {
     Vector3f mulProject(Matrix4fc mat, Vector3f dest);
 
     /**
-     * Multiply the given matrix <code>mat</code> with this vector, perform perspective division
-     * and store the <code>(x, y, z)</code> result in <code>dest</code>.
-     * <p>
-     * This method does not make any assumptions or optimizations about the properties of the specified matrix.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the matrix to multiply this vector by
-     * @param dest
-     *          will hold the result
-     * @return dest
-     */
-    Vector3f mulProjectGeneric(Matrix4fc mat, Vector3f dest);
-
-    /**
-     * Multiply the given matrix <code>mat</code> with this vector, perform perspective division
-     * and store the result in <code>dest</code>.
-     * <p>
-     * This method does not make any assumptions or optimizations about the properties of the specified matrix.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the matrix to multiply this vector by
-     * @param dest
-     *          will hold the result
-     * @return dest
-     */
-    Vector4f mulProjectGeneric(Matrix4fc mat, Vector4f dest);
-
-    /**
-     * Multiply the given matrix <code>mat</code>, which is assumed to only contain translation, with this vector,
-     * perform perspective division and store the <code>(x, y, z)</code> result in <code>dest</code>.
-     * <p>
-     * This method only works if the given matrix _only_ represents a translation.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the matrix to multiply this vector by
-     * @param dest
-     *          will hold the result
-     * @return dest
-     */
-    Vector3f mulProjectTranslation(Matrix4fc mat, Vector3f dest);
-
-    /**
-     * Multiply the given matrix <code>mat</code>, which is assumed to only contain translation,
-     * with this vector, perform perspective division and store the result in <code>dest</code>.
-     * <p>
-     * This method does not make any assumptions or optimizations about the properties of the specified matrix.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the matrix to multiply this vector by
-     * @param dest
-     *          will hold the result
-     * @return dest
-     */
-    Vector4f mulProjectTranslation(Matrix4fc mat, Vector4f dest);
-
-    /**
-     * Multiply the given affine matrix <code>mat</code>, with this vector,
-     * perform perspective division and store the <code>(x, y, z)</code> result in <code>dest</code>.
-     * <p>
-     * This method only works if the given matrix _only_ represents an affine transformation.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the matrix to multiply this vector by
-     * @param dest
-     *          will hold the result
-     * @return dest
-     */
-    Vector3f mulProjectAffine(Matrix4fc mat, Vector3f dest);
-
-    /**
-     * Multiply the given affine matrix <code>mat</code>, with this vector,
-     * perform perspective division and store the result in <code>dest</code>.
-     * <p>
-     * This method only works if the given matrix _only_ represents an affine transformation.
-     * <p>
-     * Note that this method performs the operation <code>M * this</code>, where <code>M</code> is the provided matrix
-     * and thus interprets <code>this</code> as a <em>column</em> vector.
-     *
-     * @param mat
-     *          the matrix to multiply this vector by
-     * @param dest
-     *          will hold the result
-     * @return dest
-     */
-    Vector4f mulProjectAffine(Matrix4fc mat, Vector4f dest);
-
-    /**
-     * Multiply all components of this vector by the given scalar
+     * Multiply all components of this {@link Vector4f} by the given scalar
      * value and store the result in <code>dest</code>.
      * 
      * @param scalar
@@ -574,7 +362,7 @@ public interface Vector4fc {
     Vector4f mul(float scalar, Vector4f dest);
 
     /**
-     * Multiply the components of this vector by the given scalar values and store the result in <code>dest</code>.
+     * Multiply the components of this Vector4f by the given scalar values and store the result in <code>dest</code>.
      * 
      * @param x
      *          the x component to multiply by
@@ -591,7 +379,7 @@ public interface Vector4fc {
     Vector4f mul(float x, float y, float z, float w, Vector4f dest);
 
     /**
-     * Divide all components of this vector by the given scalar
+     * Divide all components of this {@link Vector4f} by the given scalar
      * value and store the result in <code>dest</code>.
      * 
      * @param scalar
@@ -603,7 +391,7 @@ public interface Vector4fc {
     Vector4f div(float scalar, Vector4f dest);
 
     /**
-     * Divide the components of this vector by the given scalar values and store the result in <code>dest</code>.
+     * Divide the components of this Vector4f by the given scalar values and store the result in <code>dest</code>.
      * 
      * @param x
      *          the x component to divide by
@@ -635,13 +423,7 @@ public interface Vector4fc {
     /**
      * Rotate this vector the specified radians around the given rotation axis and store the result
      * into <code>dest</code>.
-     * <p>
-     * This vector's <code>w</code> component is ignored.
-     * <p>
-     * If the rotation axis is either <code>(1, 0, 0)</code>, <code>(0, 1, 0)</code> or <code>(0, 0, 1)</code>,
-     * then {@link #rotateX(float, Vector4f) rotateX()}, {@link #rotateY(float, Vector4f) rotateY()} or
-     * {@link #rotateZ(float, Vector4f) rotateZ()}, respectively, should be used instead.
-     *
+     * 
      * @param angle
      *          the angle in radians
      * @param aX

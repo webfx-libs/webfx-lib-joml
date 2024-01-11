@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2017-2023 JOML
+ * Copyright (c) 2017-2022 JOML
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,12 @@
  */
 package org.joml;
 
-//#ifdef __HAS_NIO__
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-//#endif
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+
 
 /**
  * Interface to a read-only view of a 3x2 matrix of single-precision floats.
@@ -210,7 +211,7 @@ public interface Matrix3x2fc {
      */
     Matrix3x2f get(Matrix3x2f dest);
 
-//#ifdef __HAS_NIO__
+
     /**
      * Store this matrix in column-major order into the supplied {@link FloatBuffer} at the current
      * buffer {@link FloatBuffer#position() position}.
@@ -402,9 +403,7 @@ public interface Matrix3x2fc {
      * @return the passed in buffer
      */
     ByteBuffer get4x4(int index, ByteBuffer buffer);
-//#endif
 
-//#ifdef __HAS_UNSAFE__
     /**
      * Store this matrix in column-major order at the given off-heap address.
      * <p>
@@ -417,19 +416,6 @@ public interface Matrix3x2fc {
      * @return this
      */
     Matrix3x2fc getToAddress(long address);
-    /**
-     * Store this matrix in row-major order at the given off-heap address.
-     * <p>
-     * This method will throw an {@link UnsupportedOperationException} when JOML is used with `-Djoml.nounsafe`.
-     * <p>
-     * <em>This method is unsafe as it can result in a crash of the JVM process when the specified address range does not belong to this process.</em>
-     *
-     * @param address
-     *            the off-heap address where to store this matrix
-     * @return this
-     */
-    Matrix3x2fc getTransposedToAddress(long address);
-//#endif
 
     /**
      * Store this matrix into the supplied float array in column-major order at the given offset.
@@ -712,7 +698,7 @@ public interface Matrix3x2fc {
      *          will contain the result
      * @return dest
      */
-    Vector3f transform(Vector3fc v, Vector3f dest);
+    Vector3f transform(Vector3f v, Vector3f dest);
 
     /**
      * Transform/multiply the given vector <code>(x, y, z)</code> by this matrix and store the result in <code>dest</code>.
@@ -757,7 +743,7 @@ public interface Matrix3x2fc {
      * In order to store the result in the same vector, use {@link #transformPosition(Vector2f)}.
      * 
      * @see #transformPosition(Vector2f)
-     * @see #transform(Vector3fc, Vector3f)
+     * @see #transform(Vector3f, Vector3f)
      * 
      * @param v
      *          the vector to transform
@@ -777,7 +763,7 @@ public interface Matrix3x2fc {
      * In order to store the result in the same vector, use {@link #transformPosition(Vector2f)}.
      * 
      * @see #transformPosition(Vector2f)
-     * @see #transform(Vector3fc, Vector3f)
+     * @see #transform(Vector3f, Vector3f)
      * 
      * @param x
      *          the x component of the vector to transform

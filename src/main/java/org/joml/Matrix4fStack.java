@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2015-2023 Kai Burjack
+ * Copyright (c) 2015-2022 Kai Burjack
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,10 +22,6 @@
  * THE SOFTWARE.
  */
 package org.joml;
-
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 
 /**
  * A stack of many {@link Matrix4f} instances. This resembles the matrix stack known from legacy OpenGL.
@@ -154,7 +150,7 @@ public class Matrix4fStack extends Matrix4f {
         return true;
     }
 
-    public void writeExternal(ObjectOutput out) throws IOException {
+    /*public void writeExternal(ObjectOutput out) throws IOException {
         super.writeExternal(out);
         out.writeInt(curr);
         for (int i = 0; i < curr; i++) {
@@ -171,15 +167,15 @@ public class Matrix4fStack extends Matrix4f {
             m.readExternal(in);
             mats[i] = m;
         }
-    }
+    }*/
 
-    public Object clone() throws CloneNotSupportedException {
+    /*public Object clone() throws CloneNotSupportedException {
         Matrix4fStack cloned = (Matrix4fStack) super.clone();
         Matrix4f[] clonedMats = new Matrix4f[mats.length];
         for (int i = 0; i < mats.length; i++)
             clonedMats[i] = (Matrix4f) mats[i].clone();
         cloned.mats = clonedMats;
         return cloned;
-    }
+    }*/
 
 }

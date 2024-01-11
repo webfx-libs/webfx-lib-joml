@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2017-2023 JOML
+ * Copyright (c) 2017-2022 JOML
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,8 +23,6 @@
  */
 package org.joml;
 
-import java.text.NumberFormat;
-
 /**
  * Internal class to detect features of the runtime.
  * 
@@ -35,67 +33,67 @@ public final class Runtime {
     public static final boolean HAS_floatToRawIntBits = hasFloatToRawIntBits();
     public static final boolean HAS_doubleToRawLongBits = hasDoubleToRawLongBits();
     public static final boolean HAS_Long_rotateLeft = hasLongRotateLeft();
-    public static final boolean HAS_Math_fma = Options.USE_MATH_FMA && hasMathFma();
+    //public static final boolean HAS_Math_fma = Options.USE_MATH_FMA && hasMathFma();
 
-    private static boolean hasMathFma() {
+    /*private static boolean hasMathFma() {
         try {
             java.lang.Math.class.getDeclaredMethod("fma", new Class[] { float.class, float.class, float.class });
             return true;
         } catch (NoSuchMethodException e) {
             return false;
         }
-    }
+    }*/
 
     private Runtime() {
     }
 
     private static boolean hasFloatToRawIntBits() {
-        try {
+        /*try {
             Float.class.getDeclaredMethod("floatToRawIntBits", new Class[] { float.class });
             return true;
-        } catch (NoSuchMethodException e) {
+        } catch (NoSuchMethodException e)*/ {
             return false;
         }
     }
 
     private static boolean hasDoubleToRawLongBits() {
-        try {
+        /*try {
             Double.class.getDeclaredMethod("doubleToRawLongBits", new Class[] { double.class });
             return true;
-        } catch (NoSuchMethodException e) {
+        } catch (NoSuchMethodException e)*/ {
             return false;
         }
     }
 
     private static boolean hasLongRotateLeft() {
-        try {
+        /*try {
             Long.class.getDeclaredMethod("rotateLeft", new Class[] { long.class, int.class });
             return true;
-        } catch (NoSuchMethodException e) {
+        } catch (NoSuchMethodException e)*/ {
             return false;
         }
     }
 
     public static int floatToIntBits(float flt) {
-        if (HAS_floatToRawIntBits)
-            return floatToIntBits1_3(flt);
+        /*if (HAS_floatToRawIntBits)
+            return floatToIntBits1_3(flt);*/
         return floatToIntBits1_2(flt);
     }
-    private static int floatToIntBits1_3(float flt) {
+    /*private static int floatToIntBits1_3(float flt) {
         return Float.floatToRawIntBits(flt);
-    }
+    }*/
     private static int floatToIntBits1_2(float flt) {
         return Float.floatToIntBits(flt);
     }
 
     public static long doubleToLongBits(double dbl) {
-        if (HAS_doubleToRawLongBits)
-            return doubleToLongBits1_3(dbl);
+        /*if (HAS_doubleToRawLongBits)
+            return doubleToLongBits1_3(dbl);*/
         return doubleToLongBits1_2(dbl);
     }
-    private static long doubleToLongBits1_3(double dbl) {
+    /*private static long doubleToLongBits1_3(double dbl) {
         return Double.doubleToRawLongBits(dbl);
-    }
+    }*/
     private static long doubleToLongBits1_2(double dbl) {
         return Double.doubleToLongBits(dbl);
     }
@@ -119,7 +117,7 @@ public final class Runtime {
         return res.toString();
     }
 
-    public static String format(double number, NumberFormat format) {
+    /*public static String format(double number, NumberFormat format) {
         if (Double.isNaN(number)) {
             return padLeft(format, " NaN");
         } else if (Double.isInfinite(number)) {
@@ -135,7 +133,7 @@ public final class Runtime {
             sb.append(" ");
         }
         return sb.append(str).toString();
-    }
+    }*/
 
     public static boolean equals(float a, float b, float delta) {
         return Float.floatToIntBits(a) == Float.floatToIntBits(b) || Math.abs(a - b) <= delta;

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2015-2023 Richard Greenlees
+ * Copyright (c) 2015-2022 Richard Greenlees
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,14 +23,8 @@
  */
 package org.joml;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-//#ifdef __HAS_NIO__
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-//#endif
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -40,18 +34,10 @@ import java.text.NumberFormat;
  * @author Richard Greenlees
  * @author Kai Burjack
  */
-public class Quaternionf implements Externalizable, Cloneable, Quaternionfc {
+public class Quaternionf implements /*Externalizable, Cloneable,*/ Quaternionfc {
 
-    private static final long serialVersionUID = 1L;
+    //private static final long serialVersionUID = 1L;
 
-//#ifdef __HAS_JVMCI__
-    private int __pad;
-//#endif
-
-    /**
-     * The real/scalar part of the quaternion.
-     */
-    public float w;
     /**
      * The first component of the vector part.
      */
@@ -64,6 +50,10 @@ public class Quaternionf implements Externalizable, Cloneable, Quaternionfc {
      * The third component of the vector part.
      */
     public float z;
+    /**
+     * The real/scalar part of the quaternion.
+     */
+    public float w;
 
     /**
      * Create a new {@link Quaternionf} and initialize it with <code>(x=0, y=0, z=0, w=1)</code>, 
@@ -252,50 +242,6 @@ public class Quaternionf implements Externalizable, Cloneable, Quaternionfc {
     }
 
     /**
-     * Subtract the quaternion <code>(x, y, z, w)</code> from this quaternion.
-     *
-     * @param x
-     *          the x component of the vector part
-     * @param y
-     *          the y component of the vector part
-     * @param z
-     *          the z component of the vector part
-     * @param w
-     *          the real/scalar component
-     * @return this
-     */
-    public Quaternionf sub(float x, float y, float z, float w) {
-        return sub(x, y, z, w, this);
-    }
-
-    public Quaternionf sub(float x, float y, float z, float w, Quaternionf dest) {
-        dest.x = this.x - x;
-        dest.y = this.y - y;
-        dest.z = this.z - z;
-        dest.w = this.w - w;
-        return dest;
-    }
-
-    /**
-     * Subtract <code>q2</code> from this quaternion.
-     *
-     * @param q2
-     *          the quaternion to add to this
-     * @return this
-     */
-    public Quaternionf sub(Quaternionfc q2) {
-        return sub(q2, this);
-    }
-
-    public Quaternionf sub(Quaternionfc q2, Quaternionf dest) {
-        dest.x = x - q2.x();
-        dest.y = y - q2.y();
-        dest.z = z - q2.z();
-        dest.w = w - q2.w();
-        return dest;
-    }
-
-    /**
      * Return the dot of this quaternion and <code>otherQuat</code>.
      * 
      * @param otherQuat
@@ -405,7 +351,6 @@ public class Quaternionf implements Externalizable, Cloneable, Quaternionfc {
         return dest.set(this);
     }
 
-//#ifdef __HAS_NIO__
     public ByteBuffer getAsMatrix3f(ByteBuffer dest) {
         MemUtil.INSTANCE.putMatrix3f(this, dest.position(), dest);
         return dest;
@@ -435,7 +380,6 @@ public class Quaternionf implements Externalizable, Cloneable, Quaternionfc {
         MemUtil.INSTANCE.putMatrix4x3f(this, dest.position(), dest);
         return dest;
     }
-//#endif
 
     /**
      * Set this quaternion to the given values.
@@ -979,7 +923,7 @@ public class Quaternionf implements Externalizable, Cloneable, Quaternionfc {
      * @param axisZ
      *          the z component of the rotation axis         
      * @param angle
-     *          the angle in degrees
+     *          the angle in radians
      * @return this
      */
     public Quaternionf fromAxisAngleDeg(float axisX, float axisY, float axisZ, float angle) {
@@ -1006,12 +950,6 @@ public class Quaternionf implements Externalizable, Cloneable, Quaternionfc {
     }
 
     public Quaternionf mul(Quaternionfc q, Quaternionf dest) {
-//#ifdef __HAS_JVMCI__
-        if (JvmciCode.canUseJvmci && q instanceof Quaternionf) {
-            JvmciCode.__Quaternionf_mul(this, (Quaternionf) q, dest);
-            return dest;
-        }
-//#endif
         return dest.set(Math.fma(w, q.x(), Math.fma(x, q.w(), Math.fma(y, q.z(), -z * q.y()))),
                         Math.fma(w, q.y(), Math.fma(-x, q.z(), Math.fma(y, q.w(), z * q.x()))),
                         Math.fma(w, q.z(), Math.fma(x, q.y(), Math.fma(-y, q.x(), z * q.w()))),
@@ -1759,27 +1697,6 @@ public class Quaternionf implements Externalizable, Cloneable, Quaternionfc {
         return div(b, this);
     }
 
-    public Quaternionf div(float f, Quaternionf dest) {
-        dest.x = x / f;
-        dest.y = y / f;
-        dest.z = z / f;
-        dest.w = w / f;
-        return this;
-    }
-
-    /**
-     * Divide this quaternion by the given scalar.
-     * <p>
-     * This method divides all the four components by the specified scalar.
-     *
-     * @param f
-     *          the factor to divide all components by
-     * @return this
-     */
-    public Quaternionf div(float f) {
-        return div(f, this);
-    }
-
     /**
      * Conjugate this quaternion.
      * 
@@ -1956,7 +1873,7 @@ public class Quaternionf implements Externalizable, Cloneable, Quaternionfc {
     }
 
     public Vector3f getEulerAnglesZYX(Vector3f eulerAngles) {
-        eulerAngles.x = Math.atan2(y * z + w * x, 0.5f - x * x - y * y);
+        eulerAngles.x = Math.atan2(y * z + w * x, 0.5f - x * x + y * y);
         eulerAngles.y = Math.safeAsin(-2.0f * (x * z - w * y));
         eulerAngles.z = Math.atan2(x * y + w * z, 0.5f - y * y - z * z);
         return eulerAngles;
@@ -2940,9 +2857,9 @@ public class Quaternionf implements Externalizable, Cloneable, Quaternionfc {
      * 
      * @return the string representation
      */
-    public String toString() {
+    /*public String toString() {
         return Runtime.formatNumbers(toString(Options.NUMBER_FORMAT));
-    }
+    }*/
 
     /**
      * Return a string representation of this quaternion by formatting the components with the given {@link NumberFormat}.
@@ -2951,11 +2868,11 @@ public class Quaternionf implements Externalizable, Cloneable, Quaternionfc {
      *          the {@link NumberFormat} used to format the quaternion components with
      * @return the string representation
      */
-    public String toString(NumberFormat formatter) {
+    /*public String toString(NumberFormat formatter) {
         return "(" + Runtime.format(x, formatter) + " " + Runtime.format(y, formatter) + " " + Runtime.format(z, formatter) + " " + Runtime.format(w, formatter) + ")";
-    }
+    }*/
 
-    public void writeExternal(ObjectOutput out) throws IOException {
+    /*public void writeExternal(ObjectOutput out) throws IOException {
         out.writeFloat(x);
         out.writeFloat(y);
         out.writeFloat(z);
@@ -2968,7 +2885,7 @@ public class Quaternionf implements Externalizable, Cloneable, Quaternionfc {
         y = in.readFloat();
         z = in.readFloat();
         w = in.readFloat();
-    }
+    }*/
 
     public int hashCode() {
         final int prime = 31;
@@ -3148,7 +3065,7 @@ public class Quaternionf implements Externalizable, Cloneable, Quaternionfc {
             return true;
         if (q == null)
             return false;
-        if (getClass() != q.getClass())
+        if (!(q instanceof Quaternionfc))
             return false;
         if (!Runtime.equals(x, q.x(), delta))
             return false;
@@ -3173,8 +3090,8 @@ public class Quaternionf implements Externalizable, Cloneable, Quaternionfc {
         return true;
     }
 
-    public Object clone() throws CloneNotSupportedException {
+    /*public Object clone() throws CloneNotSupportedException {
         return super.clone();
-    }
+    }*/
 
 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2015-2023 JOML
+ * Copyright (c) 2015-2022 JOML
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -49,21 +49,19 @@ public class Math {
      * from the same site.
      */
     public static final double PI = java.lang.Math.PI;
-    public static final double PI_TIMES_2 = PI * 2.0;
-    public static final float PI_f = (float) java.lang.Math.PI;
-    public static final float PI_TIMES_2_f = PI_f * 2.0f;
-    public static final double PI_OVER_2 = PI * 0.5;
-    public static final float PI_OVER_2_f = (float) (PI * 0.5);
-    public static final double PI_OVER_4 = PI * 0.25;
-    public static final float PI_OVER_4_f = (float) (PI * 0.25);
-    public static final double ONE_OVER_PI = 1.0 / PI;
-    public static final float ONE_OVER_PI_f = (float) (1.0 / PI);
+    static final double PI2 = PI * 2.0;
+    static final float PI_f = (float) java.lang.Math.PI;
+    static final float PI2_f = PI_f * 2.0f;
+    static final double PIHalf = PI * 0.5;
+    static final float PIHalf_f = (float) (PI * 0.5);
+    static final double PI_4 = PI * 0.25;
+    static final double PI_INV = 1.0 / PI;
     private static final int lookupBits = Options.SIN_LOOKUP_BITS;
     private static final int lookupTableSize = 1 << lookupBits;
     private static final int lookupTableSizeMinus1 = lookupTableSize - 1;
     private static final int lookupTableSizeWithMargin = lookupTableSize + 1;
-    private static final float pi2OverLookupSize = PI_TIMES_2_f / lookupTableSize;
-    private static final float lookupSizeOverPi2 = lookupTableSize / PI_TIMES_2_f;
+    private static final float pi2OverLookupSize = PI2_f / lookupTableSize;
+    private static final float lookupSizeOverPi2 = lookupTableSize / PI2_f;
     private static final float sinTable[];
     static {
         if (Options.FASTMATH && Options.SIN_LOOKUP) {
@@ -89,7 +87,7 @@ public class Math {
      * @author theagentd
      */
     static double sin_theagentd_arith(double x){
-        double xi = floor((x + PI_OVER_4) * ONE_OVER_PI);
+        double xi = floor((x + PI_4) * PI_INV);
         double x_ = x - xi * PI;
         double sign = ((int)xi & 1) * -2 + 1;
         double x2 = x_ * x_;
@@ -109,7 +107,7 @@ public class Math {
      * Reference: <a href="http://www.java-gaming.org/topics/joml-1-8-0-release/37491/msg/361718/view.html#msg361718">http://www.java-gaming.org/</a>
      */
     static double sin_roquen_arith(double x) {
-        double xi = Math.floor((x + PI_OVER_4) * ONE_OVER_PI);
+        double xi = Math.floor((x + PI_4) * PI_INV);
         double x_ = x - xi * PI;
         double sign = ((int)xi & 1) * -2 + 1;
         double x2 = x_ * x_;
@@ -148,7 +146,7 @@ public class Math {
      * Reference: <a href="http://www.java-gaming.org/topics/joml-1-8-0-release/37491/msg/361815/view.html#msg361815">http://www.java-gaming.org/</a>
      */
     static double sin_roquen_9(double v) {
-      double i  = java.lang.Math.rint(v* ONE_OVER_PI);
+      double i  = java.lang.Math.rint(v*PI_INV);
       double x  = v - i * Math.PI;
       double qs = 1-2*((int)i & 1);
       double x2 = x*x;
@@ -174,7 +172,7 @@ public class Math {
      * Reference: <a href="http://www.java-gaming.org/topics/joml-1-8-0-release/37491/msg/361815/view.html#msg361815">http://www.java-gaming.org/</a>
      */
     static double sin_roquen_newk(double v) {
-      double i  = java.lang.Math.rint(v* ONE_OVER_PI);
+      double i  = java.lang.Math.rint(v*PI_INV);
       double x  = v - i * Math.PI;
       double qs = 1-2*((int)i & 1);
       double x2 = x*x;
@@ -222,40 +220,40 @@ public class Math {
 
     public static float cos(float rad) {
         if (Options.FASTMATH)
-            return sin(rad + PI_OVER_2_f);
+            return sin(rad + PIHalf_f);
         return (float) java.lang.Math.cos(rad);
     }
     public static double cos(double rad) {
         if (Options.FASTMATH)
-            return sin(rad + PI_OVER_2);
+            return sin(rad + PIHalf);
         return java.lang.Math.cos(rad);
     }
 
     public static float cosFromSin(float sin, float angle) {
         if (Options.FASTMATH)
-            return sin(angle + PI_OVER_2_f);
+            return sin(angle + PIHalf_f);
         return cosFromSinInternal(sin, angle);
     }
     private static float cosFromSinInternal(float sin, float angle) {
         // sin(x)^2 + cos(x)^2 = 1
         float cos = sqrt(1.0f - sin * sin);
-        float a = angle + PI_OVER_2_f;
-        float b = a - (int)(a / PI_TIMES_2_f) * PI_TIMES_2_f;
+        float a = angle + PIHalf_f;
+        float b = a - (int)(a / PI2_f) * PI2_f;
         if (b < 0.0)
-            b = PI_TIMES_2_f + b;
+            b = PI2_f + b;
         if (b >= PI_f)
             return -cos;
         return cos;
     }
     public static double cosFromSin(double sin, double angle) {
         if (Options.FASTMATH)
-            return sin(angle + PI_OVER_2);
+            return sin(angle + PIHalf);
         // sin(x)^2 + cos(x)^2 = 1
         double cos = sqrt(1.0 - sin * sin);
-        double a = angle + PI_OVER_2;
-        double b = a - (int)(a / PI_TIMES_2) * PI_TIMES_2;
+        double a = angle + PIHalf;
+        double b = a - (int)(a / PI2) * PI2;
         if (b < 0.0)
-            b = PI_TIMES_2 + b;
+            b = PI2 + b;
         if (b >= PI)
             return -cos;
         return cos;
@@ -313,13 +311,13 @@ public class Math {
      */
     private static double fastAtan2(double y, double x) {
         double ax = x >= 0.0 ? x : -x, ay = y >= 0.0 ? y : -y;
-        double a = ay > ax ? ax / ay : ay / ax;
+        double a = min(ax, ay) / max(ax, ay);
         double s = a * a;
-        double r = fma(fma(fma(-0.0464964749, s, 0.15931422), s, -0.327622764) * s, a, a);
+        double r = ((-0.0464964749 * s + 0.15931422) * s - 0.327622764) * s * a + a;
         if (ay > ax)
-            r = PI_OVER_2 - r;
+            r = 1.57079637 - r;
         if (x < 0.0)
-            r = PI - r;
+            r = 3.14159274 - r;
         return y >= 0 ? r : -r;
     }
 
@@ -339,10 +337,10 @@ public class Math {
         return java.lang.Math.asin(r);
     }
     public static float safeAsin(float r) {
-        return r <= -1.0f ? -PI_OVER_2_f : r >= 1.0f ? PI_OVER_2_f : asin(r);
+        return r <= -1.0f ? -PIHalf_f : r >= 1.0f ? PIHalf_f : asin(r);
     }
     public static double safeAsin(double r) {
-        return r <= -1.0 ? -PI_OVER_2 : r >= 1.0 ? PI_OVER_2 : asin(r);
+        return r <= -1.0 ? -PIHalf : r >= 1.0 ? PIHalf : asin(r);
     }
 
     public static float abs(float r) {
@@ -353,30 +351,21 @@ public class Math {
     }
 
     static boolean absEqualsOne(float r) {
-        return (Float.floatToRawIntBits(r) & 0x7FFFFFFF) == 0x3F800000;
+        /*return (Float.floatToRawIntBits(r) & 0x7FFFFFFF) == 0x3F800000;*/ return abs(r) == 1;
     }
     static boolean absEqualsOne(double r) {
-        return (Double.doubleToRawLongBits(r) & 0x7FFFFFFFFFFFFFFFL) == 0x3FF0000000000000L;
+        /*return (Double.doubleToRawLongBits(r) & 0x7FFFFFFFFFFFFFFFL) == 0x3FF0000000000000L;*/ return abs(r) == 1;
     }
 
     public static int abs(int r) {
-        return java.lang.Math.abs(r);
-    }
-    public static long abs(long r) {
         return java.lang.Math.abs(r);
     }
 
     public static int max(int x, int y) {
         return java.lang.Math.max(x, y);
     }
-    public static int min(int x, int y) {
-        return java.lang.Math.min(x, y);
-    }
 
-    public static long max(long x, long y) {
-        return java.lang.Math.max(x, y);
-    }
-    public static long min(long x, long y) {
+    public static int min(int x, int y) {
         return java.lang.Math.min(x, y);
     }
 
@@ -403,9 +392,6 @@ public class Math {
     public static int clamp(int a, int b, int val) {
         return max(a, min(b, val));
     }
-    public static long clamp(long a, long b, long val) {
-        return max(a, min(b, val));
-    }
 
     public static float toRadians(float angles) {
         return (float) java.lang.Math.toRadians(angles);
@@ -414,9 +400,6 @@ public class Math {
         return java.lang.Math.toRadians(angles);
     }
 
-    public static float toDegrees(float angles) {
-        return (float) java.lang.Math.toDegrees(angles);
-    }
     public static double toDegrees(double angles) {
         return java.lang.Math.toDegrees(angles);
     }
@@ -458,14 +441,14 @@ public class Math {
     }
 
     public static float fma(float a, float b, float c) {
-        if (Runtime.HAS_Math_fma)
-            return java.lang.Math.fma(a, b, c);
+        /*if (Runtime.HAS_Math_fma)
+            return java.lang.Math.fma(a, b, c);*/
         return a * b + c;
     }
 
     public static double fma(double a, double b, double c) {
-        if (Runtime.HAS_Math_fma)
-            return java.lang.Math.fma(a, b, c);
+        /*if (Runtime.HAS_Math_fma)
+            return java.lang.Math.fma(a, b, c);*/
         return a * b + c;
     }
 
@@ -503,24 +486,6 @@ public class Math {
             return roundHalfEven(v);
         default:
             throw new UnsupportedOperationException();
-        }
-    }
-    public static long roundLongUsing(double v, int mode) {
-        switch (mode) {
-            case RoundingMode.TRUNCATE:
-                return (long) v;
-            case RoundingMode.CEILING:
-                return (long) java.lang.Math.ceil(v);
-            case RoundingMode.FLOOR:
-                return (long) java.lang.Math.floor(v);
-            case RoundingMode.HALF_DOWN:
-                return roundHalfDown(v);
-            case RoundingMode.HALF_UP:
-                return roundHalfUp(v);
-            case RoundingMode.HALF_EVEN:
-                return roundHalfEven(v);
-            default:
-                throw new UnsupportedOperationException();
         }
     }
     
@@ -583,16 +548,6 @@ public class Math {
         return (v > 0) ? (int) java.lang.Math.floor(v + 0.5d) : (int) java.lang.Math.ceil(v - 0.5d);
     }
 
-    public static long roundLongHalfEven(double v) {
-        return (long) java.lang.Math.rint(v);
-    }
-    public static long roundLongHalfDown(double v) {
-        return (v > 0) ? (long) java.lang.Math.ceil(v - 0.5d) : (long) java.lang.Math.floor(v + 0.5d);
-    }
-    public static long roundLongHalfUp(double v) {
-        return (v > 0) ? (long) java.lang.Math.floor(v + 0.5d) : (long) java.lang.Math.ceil(v - 0.5d);
-    }
-
     public static double random() {
         return java.lang.Math.random();
     }
@@ -605,22 +560,12 @@ public class Math {
     }
     public static int signum(int v) {
         int r;
-//#ifdef __HAS_INTEGER_SIGNUM__
         r = Integer.signum(v);
-//#else
-        // code from java.lang.Integer.signum(int)
-        r = (v >> 31) | (-v >>> 31);
-//#endif
         return r;
     }
     public static int signum(long v) {
         int r;
-//#ifdef __HAS_INTEGER_SIGNUM__
         r = Long.signum(v);
-//#else
-        // code from java.lang.Long.signum(long)
-        r = (int) ((v >> 63) | (-v >>> 63));
-//#endif
         return r;
     }
 }
