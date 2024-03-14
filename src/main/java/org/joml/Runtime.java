@@ -99,7 +99,7 @@ public final class Runtime {
     }
 
     public static String formatNumbers(String str) {
-        StringBuffer res = new StringBuffer();
+        StringBuilder res = new StringBuilder();
         int eIndex = Integer.MIN_VALUE;
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);

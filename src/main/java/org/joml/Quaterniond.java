@@ -23,8 +23,8 @@
  */
 package org.joml;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
+//import java.text.DecimalFormat;
+//import java.text.NumberFormat;
 
 /**
  * Quaternion of 4 double-precision floats which can represent rotation and uniform scaling.

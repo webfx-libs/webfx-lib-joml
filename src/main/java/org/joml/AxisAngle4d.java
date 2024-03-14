@@ -23,8 +23,6 @@
  */
 package org.joml;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 
 /**
  * Represents a 3D rotation of a given radians about an axis represented as an

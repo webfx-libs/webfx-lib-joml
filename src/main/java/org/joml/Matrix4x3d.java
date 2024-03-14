@@ -26,8 +26,8 @@ package org.joml;
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
+//import java.text.DecimalFormat;
+//import java.text.NumberFormat;
 
 /**
  * Contains the definition of an affine 4x3 matrix (4 columns, 3 rows) of doubles, and associated functions to transform

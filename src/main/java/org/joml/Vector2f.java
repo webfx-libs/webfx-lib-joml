@@ -25,8 +25,8 @@ package org.joml;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
+//import java.text.DecimalFormat;
+//import java.text.NumberFormat;
 
 /**
  * Represents a 2D vector with single-precision.

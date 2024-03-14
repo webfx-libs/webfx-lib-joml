@@ -23,7 +23,7 @@
  */
 package org.joml;
 
-import java.text.NumberFormat;
+//import java.text.NumberFormat;
 
 /**
  * Utility class for reading system properties.

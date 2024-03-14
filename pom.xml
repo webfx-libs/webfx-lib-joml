@@ -35,4 +35,16 @@
         <!-- Necessary for single-module libraries, otherwise the webfx export is done too late in deploy phase -->
         <plugin.webfx.param.export-phase>install</plugin.webfx.param.export-phase>
     </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.treblereel.gwt.nio</groupId>
+            <artifactId>gwt-nio</artifactId>
+            <version>1.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+    </dependencies>
+
 </project>
