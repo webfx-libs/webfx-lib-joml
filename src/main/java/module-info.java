@@ -2,9 +2,6 @@
 
 module webfx.lib.joml {
 
-    // Direct dependencies modules
-    requires java.base;
-
     // Exported packages
     exports org.joml;
 
